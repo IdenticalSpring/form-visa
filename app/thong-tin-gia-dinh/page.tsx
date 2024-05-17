@@ -2,6 +2,7 @@ import { Step3Form } from "@/components/forms/step3";
 import { Step4Form } from "@/components/forms/step4";
 import { Step5Form } from "@/components/forms/step5";
 import { Step6Form } from "@/components/forms/step6";
+import MultiStepHeader from "@/components/shared/multi-step-header";
 import { prisma } from "@/lib/db";
 import { redirect } from "next/navigation";
 
@@ -19,7 +20,8 @@ export default async function page({
   return (
 <div className="background-wrapper m-auto bg-opacity-50 min-h-screen flex items-center justify-center p-10">
     <div className="w-[600px] max-w-[90%]  p-10 rounded-lg bg-white bg-opacity-90">
-        <h1 className="text-center text-lg mb-5">Step 6</h1>
+    <MultiStepHeader currentStep={6} totalSteps={7} /> 
+
         <Step6Form data={data} />
       </div>
     </div>

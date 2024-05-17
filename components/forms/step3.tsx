@@ -14,14 +14,15 @@ import { Textarea } from "../ui/textarea";
 import { DatePicker2 } from "../shared/date-picker2";
 import { saveData } from "@/actions";
 import validator from "validator";
+import { useEffect, useState } from "react";
 
 const formSchema = z.object({
   current_job: z
     .string({ message: "Vui lòng nhập trường này" })
-    .min(1, "Vui lòng  nhập trường này"),
+    .min(1, "Vui lòng nhập trường này"),
   current_job_address: z
     .string({ message: "Vui lòng nhập trường này" })
-    .min(1, "Vui lòng  nhập trường này"),
+    .min(1, "Vui lòng nhập trường này"),
   current_job_start_date: z.date({ message: "Vui lòng nhập trường này" }),
   current_company_phone_number: z
     .string({
@@ -35,7 +36,7 @@ const formSchema = z.object({
     .string({
       message: "Vui lòng nhập trường này",
     })
-    .min(1, "Vui lòng  nhập trường này"),
+    .min(1, "Vui lòng nhập trường này"),
   current_job_salary: z.number({
     message: "Vui lòng nhập trường này",
   }),
@@ -43,12 +44,15 @@ const formSchema = z.object({
     .string({
       message: "Vui lòng nhập trường này",
     })
-    .min(1, "Vui lòng  nhập trường này"),
+    .min(1, "Vui lòng nhập trường này"),
 });
+
 export const Step3Form = ({ data }: { data: UserInfo }) => {
   const router = useRouter();
   const searchParams = useSearchParams();
   console.log(searchParams.get("country"), searchParams.get("email"));
+  const [isInitialLoad, setIsInitialLoad] = useState(true);
+
   const {
     register,
     handleSubmit,
@@ -64,15 +68,33 @@ export const Step3Form = ({ data }: { data: UserInfo }) => {
       current_job_address: data.current_job_address ?? "",
       current_job_detail: data.current_job_detail ?? "",
       current_job_salary: data.current_job_salary ?? 0,
-      current_job_start_date: data.current_job_start_date ?? new Date(),
+      current_job_start_date: data.current_job_start_date ? new Date(data.current_job_start_date) : new Date(),
       current_job_title: data.current_job_title ?? "",
     },
   });
+  const watchedValues = watch();
+
+  useEffect(() => {
+    if (isInitialLoad) {
+      const storedData = localStorage.getItem("step3FormData");
+      if (storedData) {
+        const parsedData = JSON.parse(storedData);
+        if (parsedData.current_job_start_date) {
+          parsedData.current_job_start_date = new Date(parsedData.current_job_start_date);
+        }
+        reset(parsedData);
+      }
+      setIsInitialLoad(false);
+    }
+  }, [reset, isInitialLoad]);
+
+  useEffect(() => {
+    if (!isInitialLoad) {
+      localStorage.setItem("step3FormData", JSON.stringify(watchedValues));
+    }
+  }, [watchedValues, isInitialLoad]);
+
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
-    // const rs = await saveData({
-    //   data,
-    // });
-    // toast(rs);
     const { ...rest } = values;
     const rs = await saveData({
       ...rest,
@@ -82,19 +104,13 @@ export const Step3Form = ({ data }: { data: UserInfo }) => {
     if (rs == "ok")
       router.push(`/thong-tin-cong-viec-truoc-day?id=${data?.id}`);
   };
-  // watch((data, {name,type} ) => {
-  //     if(name === "is_has_other_nationality") {
-  //       if(data.is_has_other_nationality == 1) {
 
-  //       }
-  //     }
-  // })
   return (
     <form
       className="flex flex-col gap-6 bg-opacity-80"
       onSubmit={handleSubmit(onSubmit, (error) => console.log(error))}
     >
-      <div className="grid  gap-4">
+      <div className="grid gap-4">
         <FormItem label="Bạn là">
           <select className="form-select" {...register("current_job")}>
             <option value="Chủ doanh nghiệp">Chủ doanh nghiệp</option>
@@ -127,7 +143,6 @@ export const Step3Form = ({ data }: { data: UserInfo }) => {
             </p>
           )}
         </FormItem>
-
         <FormItem
           id="current_company_phone_number"
           label="Số điện thoại công ty"

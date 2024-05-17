@@ -11,23 +11,28 @@ import { z } from "zod";
 import { DatePicker2 } from "../shared/date-picker2";
 import { FormItem } from "../shared/form-item";
 import { Button } from "../ui/button";
+import { useEffect, useState } from "react";
 
 const formSchema = z.object({
   id_issue_date: z.date({ message: "Vui lòng nhập trường này" }),
   id_expire_date: z.date({ message: "Vui lòng nhập trường này" }),
   id_country_receive: z
     .string({ message: "Vui lòng nhập trường này" })
-    .min(1, "Vui lòng  nhập trường này"),
+    .min(1, "Vui lòng nhập trường này"),
   id_city_receive: z
     .string({ message: "Vui lòng nhập trường này" })
-    .min(1, "Vui lòng  nhập trường này"),
+    .min(1, "Vui lòng nhập trường này"),
   id_lost_reason: z.string().optional(),
   is_id_had_been_lost: z.number(),
 });
+
 export const Step2Form = ({ data }: { data: UserInfo }) => {
   const router = useRouter();
   const searchParams = useSearchParams();
   console.log(searchParams.get("country"), searchParams.get("email"));
+
+  const [isInitialLoad, setIsInitialLoad] = useState(true);
+
   const {
     register,
     handleSubmit,
@@ -40,24 +45,44 @@ export const Step2Form = ({ data }: { data: UserInfo }) => {
     defaultValues: {
       id_city_receive: data?.id_city_receive ?? "",
       id_country_receive: data?.id_country_receive ?? "",
-      id_expire_date: data?.id_expire_date ?? new Date(),
-      id_issue_date: data?.id_issue_date ?? new Date(),
+      id_expire_date: data?.id_expire_date ? new Date(data.id_expire_date) : new Date(),
+      id_issue_date: data?.id_issue_date ? new Date(data.id_issue_date) : new Date(),
       is_id_had_been_lost: data?.id_lost_reason ? 1 : 0,
       id_lost_reason: data?.id_lost_reason ?? "",
     },
   });
+
+  const watchedValues = watch();
+
+  useEffect(() => {
+    if (isInitialLoad) {
+      const storedData = localStorage.getItem("step2FormData");
+      if (storedData) {
+        const parsedData = JSON.parse(storedData);
+        if (parsedData.id_issue_date) {
+          parsedData.id_issue_date = new Date(parsedData.id_issue_date);
+        }
+        if (parsedData.id_expire_date) {
+          parsedData.id_expire_date = new Date(parsedData.id_expire_date);
+        }
+        reset(parsedData);
+      }
+      setIsInitialLoad(false);
+    }
+  }, [reset, isInitialLoad]);
+
+  useEffect(() => {
+    if (!isInitialLoad) {
+      localStorage.setItem("step2FormData", JSON.stringify(watchedValues));
+    }
+  }, [watchedValues, isInitialLoad]);
+
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     const { is_id_had_been_lost, ...rest } = values;
     const rs = await saveData({ ...rest, id: data.id });
     if (rs == "ok") router.push(`/thong-tin-cong-viec-hien-tai?id=${data?.id}`);
   };
-  // watch((data, {name,type} ) => {
-  //     if(name === "is_has_other_nationality") {
-  //       if(data.is_has_other_nationality == 1) {
 
-  //       }
-  //     }
-  // })
   return (
     <form
       className="flex flex-col gap-6 bg-opacity-80"
@@ -77,9 +102,9 @@ export const Step2Form = ({ data }: { data: UserInfo }) => {
             </p>
           )}
         </FormItem>
-        <FormItem label="Ngày cấp">
+        <FormItem label="Ngày hết hạn">
           <DatePicker2
-          className="custom-date-picker"
+            className="custom-date-picker"
             defaultValue={new Date(2020, 1, 1)}
             date={watch("id_expire_date")}
             setDate={(date) => setValue("id_expire_date", date ?? new Date())}
@@ -148,7 +173,10 @@ export const Step2Form = ({ data }: { data: UserInfo }) => {
           <ArrowLeft />
           Trở về
         </Button>
-        <Button type="submit" className="text-white capitalize bg-[#3b6b87] hover:bg-[#a2c5d4]">
+        <Button
+          type="submit"
+          className="text-white capitalize bg-[#3b6b87] hover:bg-[#a2c5d4]"
+        >
           Tiếp tục
         </Button>
       </div>

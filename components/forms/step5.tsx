@@ -11,23 +11,27 @@ import { DatePicker2 } from "../shared/date-picker2";
 import { FormItem } from "../shared/form-item";
 import { Button } from "../ui/button";
 import { useRouter } from "next-nprogress-bar";
+import { useEffect, useState } from "react";
 
 const formSchema = z.object({
   education_level: z
     .string({ message: "Vui lòng nhập trường này" })
-    .min(1, "Vui lòng  nhập trường này"),
+    .min(1, "Vui lòng nhập trường này"),
   school_name: z
     .string({ message: "Vui lòng nhập trường này" })
-    .min(1, "Vui lòng  nhập trường này"),
+    .min(1, "Vui lòng nhập trường này"),
   major: z
     .string({ message: "Vui lòng nhập trường này" })
-    .min(1, "Vui lòng  nhập trường này"),
+    .min(1, "Vui lòng nhập trường này"),
   school_start_date: z.date({ message: "Vui lòng nhập trường này" }),
   school_end_date: z.date({ message: "Vui lòng nhập trường này" }),
 });
+
 export const Step5Form = ({ data }: { data: UserInfo }) => {
   const router = useRouter();
   const searchParams = useSearchParams();
+  const [isInitialLoad, setIsInitialLoad] = useState(true);
+
   const {
     register,
     handleSubmit,
@@ -40,11 +44,37 @@ export const Step5Form = ({ data }: { data: UserInfo }) => {
     defaultValues: {
       education_level: data.education_level ?? "",
       major: data.major ?? "",
-      school_end_date: data.school_end_date ?? new Date(),
+      school_end_date: data.school_end_date ? new Date(data.school_end_date) : new Date(),
       school_name: data.school_name ?? "",
-      school_start_date: data.school_start_date ?? new Date(),
+      school_start_date: data.school_start_date ? new Date(data.school_start_date) : new Date(),
     },
   });
+
+  const watchedValues = watch();
+
+  useEffect(() => {
+    if (isInitialLoad) {
+      const storedData = localStorage.getItem("step5FormData");
+      if (storedData) {
+        const parsedData = JSON.parse(storedData);
+        if (parsedData.school_start_date) {
+          parsedData.school_start_date = new Date(parsedData.school_start_date);
+        }
+        if (parsedData.school_end_date) {
+          parsedData.school_end_date = new Date(parsedData.school_end_date);
+        }
+        reset(parsedData);
+      }
+      setIsInitialLoad(false);
+    }
+  }, [reset, isInitialLoad]);
+
+  useEffect(() => {
+    if (!isInitialLoad) {
+      localStorage.setItem("step5FormData", JSON.stringify(watchedValues));
+    }
+  }, [watchedValues, isInitialLoad]);
+
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     const rs = await saveData({
       ...values,
@@ -52,6 +82,7 @@ export const Step5Form = ({ data }: { data: UserInfo }) => {
     });
     if (rs == "ok") router.push(`/thong-tin-gia-dinh?id=${data.id}`);
   };
+
   return (
     <form
       className="flex flex-col gap-6 bg-opacity-80"

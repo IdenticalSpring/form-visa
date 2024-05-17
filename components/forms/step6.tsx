@@ -1,20 +1,17 @@
 "use client";
 import { Input } from "@/components/ui/input";
-import { countryList } from "@/constants";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { UserInfo } from "@prisma/client";
 import { ArrowLeft } from "lucide-react";
 import { useSearchParams } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { DatePicker } from "../shared/date-picker";
 import { FormItem } from "../shared/form-item";
 import { Button } from "../ui/button";
-import { Textarea } from "../ui/textarea";
-import { DatePicker2 } from "../shared/date-picker2";
 import { toast } from "sonner";
 import { useRouter } from "next-nprogress-bar";
 import { saveData } from "@/actions";
+import { useEffect, useState } from "react";
 
 const formSchema = z.object({
   is_parent_live_in_visiting_country: z.number({
@@ -22,7 +19,6 @@ const formSchema = z.object({
   }),
   stay_status: z.string({ message: "Vui lòng nhập trường này" }),
   is_relatives_living_in_visiting_country: z.number(),
-
   relatives_info_living_in_visiting_country: z
     .string()
     .min(1, "Vui lòng nhập trường này"),
@@ -33,9 +29,12 @@ const formSchema = z.object({
     .min(1, "Vui lòng nhập trường này"),
   relatives_stay_status: z.string({ message: "Vui lòng nhập trường này" }),
 });
+
 export const Step6Form = ({ data }: { data: UserInfo }) => {
   const router = useRouter();
   const searchParams = useSearchParams();
+  const [isInitialLoad, setIsInitialLoad] = useState(true);
+
   const {
     register,
     handleSubmit,
@@ -57,6 +56,25 @@ export const Step6Form = ({ data }: { data: UserInfo }) => {
       stay_status: data.stay_status ?? "",
     },
   });
+
+  const watchedValues = watch();
+
+  useEffect(() => {
+    if (isInitialLoad) {
+      const storedData = localStorage.getItem("step6FormData");
+      if (storedData) {
+        reset(JSON.parse(storedData));
+      }
+      setIsInitialLoad(false);
+    }
+  }, [reset, isInitialLoad]);
+
+  useEffect(() => {
+    if (!isInitialLoad) {
+      localStorage.setItem("step6FormData", JSON.stringify(watchedValues));
+    }
+  }, [watchedValues, isInitialLoad]);
+
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     const { ...rest } = values;
     const rs = await saveData({
@@ -69,6 +87,7 @@ export const Step6Form = ({ data }: { data: UserInfo }) => {
     });
     if (rs == "ok") router.push(`/thong-tin-du-lich?id=${data.id}`);
   };
+
   return (
     <form
       className="flex flex-col gap-6 bg-opacity-80"
@@ -107,7 +126,6 @@ export const Step6Form = ({ data }: { data: UserInfo }) => {
             </p>
           )}
         </FormItem>
-
         <FormItem
           id="is_relatives_living_in_visiting_country"
           label="Đương đơn có người thân nào khác (không phải là cha mẹ) sinh sống tại đất nước bạn muốn xin visa không?"
@@ -130,7 +148,6 @@ export const Step6Form = ({ data }: { data: UserInfo }) => {
         <FormItem
           id="relatives_info_living_in_visiting_country"
           label="Ghi rõ thông tin người thân"
-
         >
           <input {...register("relatives_info_living_in_visiting_country")} />
           {errors.relatives_info_living_in_visiting_country && (

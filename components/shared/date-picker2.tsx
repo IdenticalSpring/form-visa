@@ -3,7 +3,6 @@
 import { Button } from "@/components/ui/button";
 import { format } from "date-fns";
 import { Calendar as CalendarIcon } from "lucide-react";
-// import { Calendar } from "@/components/ui/calendar";
 import {
   Popover,
   PopoverContent,
@@ -30,9 +29,10 @@ export function DatePicker2({
         <Button
           variant={"outline"}
           className={cn(
-            "w-full justify-start text-left font-normal border-0.3 border-[#3b6b87] focus:ring-2 focus:border-[#3b6b87] focus:ring-offset-0 focus:ring-[#3b6b87] focus:bg-[#a2c5d4] flex h-10 rounded-lg bg-white px-3 py-2 text-sm file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-slate-500 focus:outline-none disabled:cursor-not-allowed disabled:opacity-50 dark:border-[#3b6b87] dark:ring-offset-[#3b6b87] dark:placeholder:text-slate-400 dark:focus-visible:ring-slate-300",
+            "custom-date-picker w-full justify-start", // Ensure button content is left-aligned
             !date && "text-muted-foreground"
           )}
+          style={{ borderWidth: "1px", borderColor: "#3b6b87" }} // Ensure border style
         >
           <CalendarIcon className="mr-2 h-4 w-4" />
           {date ? (

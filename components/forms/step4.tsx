@@ -10,19 +10,23 @@ import { DatePicker2 } from "../shared/date-picker2";
 import { FormItem } from "../shared/form-item";
 import { Button } from "../ui/button";
 import { useRouter } from "next-nprogress-bar";
+import { useEffect, useState } from "react";
 
 const formSchema = z.object({
   old_job: z
     .string({ message: "Vui lòng nhập trường này" })
-    .min(1, "Vui lòng  nhập trường này"),
+    .min(1, "Vui lòng nhập trường này"),
   old_job_title: z
     .string({ message: "Vui lòng nhập trường này" })
-    .min(1, "Vui lòng  nhập trường này"),
+    .min(1, "Vui lòng nhập trường này"),
   old_job_start_date: z.date({ message: "Vui lòng nhập trường này" }),
   old_job_end_date: z.date({ message: "Vui lòng nhập trường này" }),
 });
+
 export const Step4Form = ({ data }: { data: UserInfo }) => {
   const router = useRouter();
+  const [isInitialLoad, setIsInitialLoad] = useState(true);
+
   const {
     register,
     handleSubmit,
@@ -34,11 +38,37 @@ export const Step4Form = ({ data }: { data: UserInfo }) => {
     resolver: zodResolver(formSchema),
     defaultValues: {
       old_job: data.old_job ?? "",
-      old_job_end_date: data.old_job_end_date ?? new Date(),
-      old_job_start_date: data.old_job_start_date ?? new Date(),
+      old_job_end_date: data.old_job_end_date ? new Date(data.old_job_end_date) : new Date(),
+      old_job_start_date: data.old_job_start_date ? new Date(data.old_job_start_date) : new Date(),
       old_job_title: data.old_job_title ?? "",
     },
   });
+
+  const watchedValues = watch();
+
+  useEffect(() => {
+    if (isInitialLoad) {
+      const storedData = localStorage.getItem("step4FormData");
+      if (storedData) {
+        const parsedData = JSON.parse(storedData);
+        if (parsedData.old_job_start_date) {
+          parsedData.old_job_start_date = new Date(parsedData.old_job_start_date);
+        }
+        if (parsedData.old_job_end_date) {
+          parsedData.old_job_end_date = new Date(parsedData.old_job_end_date);
+        }
+        reset(parsedData);
+      }
+      setIsInitialLoad(false);
+    }
+  }, [reset, isInitialLoad]);
+
+  useEffect(() => {
+    if (!isInitialLoad) {
+      localStorage.setItem("step4FormData", JSON.stringify(watchedValues));
+    }
+  }, [watchedValues, isInitialLoad]);
+
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     const { ...rest } = values;
     const rs = await saveData({
@@ -47,12 +77,13 @@ export const Step4Form = ({ data }: { data: UserInfo }) => {
     });
     if (rs == "ok") router.push(`/trinh-do-hoc-van?id=${data.id}`);
   };
+
   return (
     <form
       className="flex flex-col gap-6 bg-opacity-80"
       onSubmit={handleSubmit(onSubmit, (error) => console.log(error))}
     >
-      <div className="grid  gap-4">
+      <div className="grid gap-4">
         <FormItem label="Bạn là">
           <select className="form-select" {...register("old_job")}>
             <option value="Chủ doanh nghiệp">Chủ doanh nghiệp</option>

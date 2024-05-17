@@ -12,43 +12,44 @@ import { FormItem } from "../shared/form-item";
 import { Button } from "../ui/button";
 import { Label } from "../ui/label";
 import { RadioGroup, RadioGroupItem } from "../ui/radio-group";
-
 import { saveData } from "@/actions";
 import validator from "validator";
+import { useEffect, useState } from "react";
+
 const formSchema = z.object({
   name: z
     .string({ message: "Vui lòng nhập trường này" })
-    .min(1, "Vui lòng  nhập trường này"),
+    .min(1, "Vui lòng nhập trường này"),
   gender: z.enum(["Male", "Female", "Other"]),
   name_alias: z
     .string({ message: "Vui lòng nhập trường này" })
-    .min(1, "Vui lòng  nhập trường này"),
+    .min(1, "Vui lòng nhập trường này"),
   dob: z.date(),
   pob: z
     .string({ message: "Vui lòng nhập trường này" })
-    .min(1, "Vui lòng  nhập trường này"),
+    .min(1, "Vui lòng nhập trường này"),
   marital_status: z
     .string({ message: "Vui lòng nhập trường này" })
-    .min(1, "Vui lòng  nhập trường này"),
+    .min(1, "Vui lòng nhập trường này"),
   husband_wife_pob: z.string(),
   is_has_kid: z.number(),
   country: z
     .string({ message: "Vui lòng nhập trường này" })
-    .min(1, "Vui lòng  nhập trường này"),
+    .min(1, "Vui lòng nhập trường này"),
   nationality: z
     .string({ message: "Vui lòng nhập trường này" })
-    .min(1, "Vui lòng  nhập trường này"),
+    .min(1, "Vui lòng nhập trường này"),
   is_has_other_nationality: z.number(),
   other_nationality: z
     .string({ message: "Vui lòng nhập trường này" })
-    .min(1, "Vui lòng  nhập trường này")
+    .min(1, "Vui lòng nhập trường này")
     .optional(),
   address_on_paper: z
     .string({ message: "Vui lòng nhập trường này" })
-    .min(1, "Vui lòng  nhập trường này"),
+    .min(1, "Vui lòng nhập trường này"),
   current_address: z
     .string({ message: "Vui lòng nhập trường này" })
-    .min(1, "Vui lòng  nhập trường này"),
+    .min(1, "Vui lòng nhập trường này"),
   phone_number: z
     .string({ message: "Vui lòng nhập trường này" })
     .refine(
@@ -56,9 +57,12 @@ const formSchema = z.object({
       "Số điện thoại không hợp lệ"
     ),
 });
+
 export const Step1Form = ({ data }: { data?: UserInfo }) => {
   const router = useRouter();
   const searchParams = useSearchParams();
+  const [isInitialLoad, setIsInitialLoad] = useState(true);
+
   const {
     register,
     handleSubmit,
@@ -71,7 +75,7 @@ export const Step1Form = ({ data }: { data?: UserInfo }) => {
     defaultValues: {
       name: data?.name ?? "",
       name_alias: data?.name_alias ?? "",
-      dob: data?.dob ?? new Date(),
+      dob: data?.dob ? new Date(data.dob) : new Date(),
       pob: data?.pob ?? "",
       address_on_paper: data?.address_on_paper ?? "",
       country: data?.country ?? "",
@@ -86,6 +90,29 @@ export const Step1Form = ({ data }: { data?: UserInfo }) => {
       other_nationality: data?.other_nationality ?? undefined,
     },
   });
+
+  const watchedValues = watch();
+
+  useEffect(() => {
+    if (isInitialLoad) {
+      const storedData = localStorage.getItem("step1FormData");
+      if (storedData) {
+        const parsedData = JSON.parse(storedData);
+        if (parsedData.dob) {
+          parsedData.dob = new Date(parsedData.dob);
+        }
+        reset(parsedData);
+      }
+      setIsInitialLoad(false);
+    }
+  }, [reset, isInitialLoad]);
+
+  useEffect(() => {
+    if (!isInitialLoad) {
+      localStorage.setItem("step1FormData", JSON.stringify(watchedValues));
+    }
+  }, [watchedValues, isInitialLoad]);
+
   const onSubmit = async (value: z.infer<typeof formSchema>) => {
     const { is_has_other_nationality, ...rest } = value;
     const rs = await saveData({
@@ -93,21 +120,15 @@ export const Step1Form = ({ data }: { data?: UserInfo }) => {
       id: data?.id,
       is_has_kid: value.is_has_kid ? true : false,
     });
-    if (rs == "ok") router.push(`/thong-tin-ho-chieu?id=${data?.id}`);
+    if (rs === "ok") router.push(`/thong-tin-ho-chieu?id=${data?.id}`);
   };
-  // watch((data, {name,type} ) => {
-  //     if(name === "is_has_other_nationality") {
-  //       if(data.is_has_other_nationality == 1) {
 
-  //       }
-  //     }
-  // })
   return (
     <form
-      className="flex flex-col gap-6 "
+      className="flex flex-col gap-6"
       onSubmit={handleSubmit(onSubmit, (error) => console.log(error))}
     >
-      <div className="grid  gap-4">
+      <div className="grid gap-4">
         <FormItem label="Họ và tên theo hộ chiếu">
           <input {...register("name")} />
           {errors.name && (
@@ -121,8 +142,8 @@ export const Step1Form = ({ data }: { data?: UserInfo }) => {
             onValueChange={(value: Gender) => setValue("gender", value)}
           >
             <div className="flex items-center space-x-2">
-              <RadioGroupItem   value="Male" id="r1" />
-              <Label htmlFor="r1">Name</Label>
+              <RadioGroupItem value="Male" id="r1" />
+              <Label htmlFor="r1">Nam</Label>
             </div>
             <div className="flex items-center space-x-2">
               <RadioGroupItem value="Female" id="r2" />
@@ -147,10 +168,8 @@ export const Step1Form = ({ data }: { data?: UserInfo }) => {
             </p>
           )}
         </FormItem>
-        <FormItem label="Ngày tháng năm sinh">
-          <DatePicker2
-            className=""
-
+        <FormItem  label="Ngày tháng năm sinh">
+          <DatePicker2 
             date={watch("dob")}
             setDate={(date) => setValue("dob", date ?? new Date())}
           />
@@ -168,9 +187,7 @@ export const Step1Form = ({ data }: { data?: UserInfo }) => {
           <RadioGroup
             defaultValue={data?.marital_status ?? "Độc thân"}
             className="flex gap-6 flex-col"
-            onValueChange={(value) => {
-              setValue("marital_status", value);
-            }}
+            onValueChange={(value) => setValue("marital_status", value)}
           >
             <div className="flex gap-6">
               <div className="flex items-center space-x-2">
@@ -268,16 +285,6 @@ export const Step1Form = ({ data }: { data?: UserInfo }) => {
             </p>
           )}
         </FormItem>
-        {/* <FormItem label="Quốc tịch">
-        <select className="form-select" {...register("nationality")}>
-          {countryList.map((c) => (
-            <option key={c}>{c}</option>
-          ))}
-        </select>
-        {errors.name && (
-          <p className="text-rose-500 text-sm mt-2">{errors.name.message}</p>
-        )}
-      </FormItem> */}
         <FormItem
           id="is_has_other_nationality"
           label="Đương đơn có thêm quốc tịch khác?"
@@ -351,7 +358,10 @@ export const Step1Form = ({ data }: { data?: UserInfo }) => {
           <ArrowLeft />
           Trở về
         </Button>
-        <Button type="submit" className="text-white capitalize bg-[#3b6b87] hover:bg-[#a2c5d4] ">
+        <Button
+          type="submit"
+          className="text-white capitalize bg-[#3b6b87] hover:bg-[#a2c5d4]"
+        >
           Tiếp tục
         </Button>
       </div>
