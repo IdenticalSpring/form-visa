@@ -119,6 +119,11 @@ export const Step3Form = ({ data }: { data: UserInfo }) => {
       router.push(`/thong-tin-cong-viec-truoc-day?id=${data?.id}`);
   };
 
+  const handleBackClick = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    router.push(`/thong-tin-ho-chieu?id=${data.id}`);
+  };
+
   return (
     <form
       className="flex flex-col gap-6 bg-opacity-80"
@@ -216,7 +221,7 @@ export const Step3Form = ({ data }: { data: UserInfo }) => {
           type="submit"
           className="bg-white text-gray-700"
           variant={"ghost"}
-          onClick={() => router.push(`/thong-tin-ho-chieu?id=${data.id}`)}
+          onClick={handleBackClick}
         >
           <ArrowLeft />
           Trở về

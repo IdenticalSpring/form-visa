@@ -77,7 +77,10 @@ export const Step4Form = ({ data }: { data: UserInfo }) => {
     });
     if (rs == "ok") router.push(`/trinh-do-hoc-van?id=${data.id}`);
   };
-
+  const handleBackClick = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    router.push(`/thong-tin-cong-viec-hien-tai?id=${data.id}`);
+  };
   return (
     <form
       className="flex flex-col gap-6 bg-opacity-80"
@@ -135,8 +138,7 @@ export const Step4Form = ({ data }: { data: UserInfo }) => {
           type="submit"
           className="bg-white text-gray-700"
           variant={"ghost"}
-          onClick={() =>
-            router.push(`/thong-tin-cong-viec-hien-tai?id=${data.id}`)
+          onClick={handleBackClick      
           }
         >
           <ArrowLeft />
