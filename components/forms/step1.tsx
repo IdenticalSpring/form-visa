@@ -53,8 +53,8 @@ const formSchema = z.object({
   phone_number: z
     .string({ message: "Vui lòng nhập trường này" })
     .refine(
-      (val) => validator.isMobilePhone(val, "vi-VN"),
-      "Số điện thoại không hợp lệ"
+      (val) => /^0[35789]\d{8}$/.test(val),
+      "Số điện thoại phải bắt đầu bằng 0 và theo sau là 3, 5, 7, 8, hoặc 9 và phải có 10 chữ số"
     ),
 });
 
@@ -70,6 +70,8 @@ export const Step1Form = ({ data }: { data?: UserInfo }) => {
     reset,
     watch,
     setValue,
+    setError,
+    clearErrors,
   } = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -112,6 +114,19 @@ export const Step1Form = ({ data }: { data?: UserInfo }) => {
       localStorage.setItem("step1FormData", JSON.stringify(watchedValues));
     }
   }, [watchedValues, isInitialLoad]);
+
+  const validatePhoneNumber = (value: string) => {
+    const pattern = /^0[35789]\d{8}$/;
+    if (!pattern.test(value)) {
+      setError("phone_number", {
+        type: "manual",
+        message: "Số điện thoại phải bắt đầu bằng 0 và theo sau là 3, 5, 7, 8, hoặc 9 và phải có 10 chữ số",
+      });
+    } else {
+      clearErrors("phone_number");
+    }
+  };
+  
 
   const onSubmit = async (value: z.infer<typeof formSchema>) => {
     const { is_has_other_nationality, ...rest } = value;
@@ -333,20 +348,24 @@ export const Step1Form = ({ data }: { data?: UserInfo }) => {
           )}
         </FormItem>
         <FormItem label="Số điện thoại di động?">
-          <input
-            {...register("phone_number")}
-            onInput={(evt) => {
-              var inputValue = evt.currentTarget.value;
-              var numericValue = inputValue.replace(/\D/g, "");
-              evt.currentTarget.value = numericValue.slice(0, 10);
-            }}
-          />
-          {errors.phone_number && (
-            <p className="text-rose-500 text-sm mt-2">
-              {errors.phone_number.message}
-            </p>
-          )}
-        </FormItem>
+  <input
+    {...register("phone_number")}
+    onInput={(evt) => {
+      let inputValue = evt.currentTarget.value;
+      inputValue = inputValue.replace(/\D/g, ""); 
+      evt.currentTarget.value = inputValue.slice(0, 10); 
+    }}
+    onBlur={(evt) => {
+      validatePhoneNumber(evt.currentTarget.value);
+    }}
+  />
+  {errors.phone_number && (
+    <p className="text-rose-500 text-sm mt-2">
+      {errors.phone_number.message}
+    </p>
+  )}
+</FormItem>
+
       </div>
       <div className="flex items-center justify-end gap-4">
         <Button

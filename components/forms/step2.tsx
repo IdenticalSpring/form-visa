@@ -24,6 +24,14 @@ const formSchema = z.object({
     .min(1, "Vui lòng nhập trường này"),
   id_lost_reason: z.string().optional(),
   is_id_had_been_lost: z.number(),
+}).refine((data) => {
+  if (data.is_id_had_been_lost === 1 && !data.id_lost_reason) {
+    return false;
+  }
+  return true;
+}, {
+  message: "Vui lòng nhập lý do mất hộ chiếu",
+  path: ["id_lost_reason"],
 });
 
 export const Step2Form = ({ data }: { data: UserInfo }) => {

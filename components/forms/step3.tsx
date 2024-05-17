@@ -59,6 +59,8 @@ export const Step3Form = ({ data }: { data: UserInfo }) => {
     formState: { errors },
     reset,
     watch,
+    setError,
+    clearErrors,
     setValue,
   } = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -93,6 +95,18 @@ export const Step3Form = ({ data }: { data: UserInfo }) => {
       localStorage.setItem("step3FormData", JSON.stringify(watchedValues));
     }
   }, [watchedValues, isInitialLoad]);
+
+  const validatePhoneNumber = (value: string) => {
+    const pattern = /^0[35789]\d{8}$/;
+    if (!pattern.test(value)) {
+      setError("current_company_phone_number", {
+        type: "manual",
+        message: "Số điện thoại phải bắt đầu bằng 0 và theo sau là 3, 5, 7, 8, hoặc 9 và phải có 10 chữ số",
+      });
+    } else {
+      clearErrors("current_company_phone_number");
+    }
+  };
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     const { ...rest } = values;
@@ -143,24 +157,25 @@ export const Step3Form = ({ data }: { data: UserInfo }) => {
             </p>
           )}
         </FormItem>
-        <FormItem
-          id="current_company_phone_number"
-          label="Số điện thoại công ty"
-        >
-          <input
-            {...register("current_company_phone_number")}
-            onInput={(evt) => {
-              var inputValue = evt.currentTarget.value;
-              var numericValue = inputValue.replace(/\D/g, "");
-              evt.currentTarget.value = numericValue.slice(0, 10);
-            }}
-          />
-          {errors.current_company_phone_number && (
-            <p className="text-rose-500 text-sm mt-2">
-              {errors.current_company_phone_number.message}
-            </p>
-          )}
-        </FormItem>
+        <FormItem id="current_company_phone_number" label="Số điện thoại công ty">
+  <input
+    {...register("current_company_phone_number")}
+    onInput={(evt) => {
+      let inputValue = evt.currentTarget.value;
+      inputValue = inputValue.replace(/\D/g, ""); // Remove non-numeric characters
+      evt.currentTarget.value = inputValue.slice(0, 10); // Limit to 10 digits
+    }}
+    onBlur={(evt) => {
+      validatePhoneNumber(evt.currentTarget.value);
+    }}
+  />
+  {errors.current_company_phone_number && (
+    <p className="text-rose-500 text-sm mt-2">
+      {errors.current_company_phone_number.message}
+    </p>
+  )}
+</FormItem>
+
         <FormItem label="Chức vụ">
           <input {...register("current_job_title")} />
           {errors.current_job_title && (
