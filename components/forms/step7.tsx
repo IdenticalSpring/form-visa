@@ -117,7 +117,7 @@ export const Step7Form = ({ data }: { data: UserInfo }) => {
 
   return (
     <form
-      className="flex flex-col gap-6"
+      className="flex flex-col gap-6 bg-opacity-80"
       onSubmit={handleSubmit(onSubmit, (error) => console.log(error))}
     >
       <div className="grid gap-4">
@@ -139,7 +139,7 @@ export const Step7Form = ({ data }: { data: UserInfo }) => {
           id="accompanying_person"
           label="Họ tên người đi cùng với đương đơn"
         >
-          <Input {...register("accompanying_person")} />
+          <input {...register("accompanying_person")} />
           {errors.accompanying_person && (
             <p className="text-rose-500 text-sm mt-2">
               {errors.accompanying_person.message}
@@ -147,7 +147,7 @@ export const Step7Form = ({ data }: { data: UserInfo }) => {
           )}
         </FormItem>
         <FormItem label="Liệt kê các quốc gia đương đơn đã từng đến trước đây (cách nhau bởi dấu  ;)">
-          <Input {...register("traveled_countries")} />
+          <input {...register("traveled_countries")} />
           {errors.traveled_countries && (
             <p className="text-rose-500 text-sm mt-2">
               {errors.traveled_countries.message}
@@ -155,7 +155,7 @@ export const Step7Form = ({ data }: { data: UserInfo }) => {
           )}
         </FormItem>
         <FormItem label="Các ngoại ngữ có thể sử dụng để giao tiếp được">
-          <Input {...register("foreign_languages")} />
+          <input {...register("foreign_languages")} />
           {errors.foreign_languages && (
             <p className="text-rose-500 text-sm mt-2">
               {errors.foreign_languages.message}
@@ -163,7 +163,7 @@ export const Step7Form = ({ data }: { data: UserInfo }) => {
           )}
         </FormItem>
         <FormItem label="Mục đích chuyến đi">
-          <Input {...register("trip_purpose")} />
+          <input {...register("trip_purpose")} />
           {errors.trip_purpose && (
             <p className="text-rose-500 text-sm mt-2">
               {errors.trip_purpose.message}
@@ -184,7 +184,7 @@ export const Step7Form = ({ data }: { data: UserInfo }) => {
           )}
         </FormItem>
         <FormItem label="Loại visa đương đơn đã xin">
-          <Input {...register("visa_type_owned")} />
+          <input {...register("visa_type_owned")} />
           {errors.visa_type_owned && (
             <p className="text-rose-500 text-sm mt-2">
               {errors.visa_type_owned.message}
@@ -212,6 +212,7 @@ export const Step7Form = ({ data }: { data: UserInfo }) => {
         </p>
         <FormItem label="Ngày tháng năm từng đến">
           <DatePicker2
+          
             date={watch("is_lived_in_visa_coutry_date")}
             setDate={(date) =>
               setValue("is_lived_in_visa_coutry_date", date ?? new Date())
@@ -224,7 +225,7 @@ export const Step7Form = ({ data }: { data: UserInfo }) => {
           )}
         </FormItem>
         <FormItem label="Số ngày ở lại">
-          <Input
+          <input
             defaultValue={0}
             {...register("is_lived_in_visa_coutry_days_stay", {
               valueAsNumber: true,
@@ -259,7 +260,7 @@ export const Step7Form = ({ data }: { data: UserInfo }) => {
           * Nếu CÓ, vui lòng ghi rõ lí do từ chối và số lần
         </p>
         <FormItem label="Lí do từ chối">
-          <Input {...register("denied_visa_reason")} min={0} />
+          <input {...register("denied_visa_reason")} min={0} />
           {errors.denied_visa_reason && (
             <p className="text-rose-500 text-sm mt-2">
               {errors.denied_visa_reason.message}
@@ -268,7 +269,7 @@ export const Step7Form = ({ data }: { data: UserInfo }) => {
         </FormItem>
 
         <FormItem label="Số lần bị từ chối">
-          <Input
+          <input
             {...register("denied_visa_number_of_time", { valueAsNumber: true })}
             defaultValue={0}
             type="number"
@@ -309,7 +310,7 @@ export const Step7Form = ({ data }: { data: UserInfo }) => {
           </select>
         </FormItem>
         <FormItem label="Đương đơn có mở hồ sơ bảo lãnh định cư tại nước nào không? Nếu có cho biết nước nào, theo diện gì ?">
-          <Input {...register("guarantee_documents")} min={0} />
+          <input {...register("guarantee_documents")} min={0} />
           {errors.guarantee_documents && (
             <p className="text-rose-500 text-sm mt-2">
               {errors.guarantee_documents.message}
@@ -461,14 +462,14 @@ export const Step7Form = ({ data }: { data: UserInfo }) => {
       <div className="flex items-center justify-end gap-4">
         <Button
           type="submit"
-          className=""
+          className="bg-white text-gray-700"
           variant={"ghost"}
           onClick={() => router.push(`/thong-tin-gia-dinh?id=${data.id}`)}
         >
           <ArrowLeft />
           Trở về
         </Button>
-        <Button type="submit" className="bg-primary">
+        <Button type="submit" className="text-white capitalize bg-[#3b6b87] hover:bg-[#a2c5d4]">
           Tiếp tục
         </Button>
       </div>

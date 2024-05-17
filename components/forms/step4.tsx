@@ -49,7 +49,7 @@ export const Step4Form = ({ data }: { data: UserInfo }) => {
   };
   return (
     <form
-      className="flex flex-col gap-6"
+      className="flex flex-col gap-6 bg-opacity-80"
       onSubmit={handleSubmit(onSubmit, (error) => console.log(error))}
     >
       <div className="grid  gap-4">
@@ -91,7 +91,7 @@ export const Step4Form = ({ data }: { data: UserInfo }) => {
         </FormItem>
 
         <FormItem label="Chức vụ">
-          <Input {...register("old_job_title")} />
+          <input {...register("old_job_title")} />
           {errors.old_job_title && (
             <p className="text-rose-500 text-sm mt-2">
               {errors.old_job_title.message}
@@ -102,7 +102,7 @@ export const Step4Form = ({ data }: { data: UserInfo }) => {
       <div className="flex items-center justify-end gap-4">
         <Button
           type="submit"
-          className=""
+          className="bg-white text-gray-700"
           variant={"ghost"}
           onClick={() =>
             router.push(`/thong-tin-cong-viec-hien-tai?id=${data.id}`)
@@ -111,7 +111,7 @@ export const Step4Form = ({ data }: { data: UserInfo }) => {
           <ArrowLeft />
           Trở về
         </Button>
-        <Button type="submit" className="bg-primary">
+        <Button type="submit" className="text-white capitalize bg-[#3b6b87] hover:bg-[#a2c5d4]">
           Tiếp tục
         </Button>
       </div>

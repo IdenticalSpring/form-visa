@@ -19,11 +19,12 @@ export default async function page({
   if (!data) redirect("/");
 
   return (
-    <div className="p-10 w-[600px] max-w-[90%] flex items-center justify-center">
-      <div>
-        <h1>Step 7</h1>
+<div className="background-wrapper m-auto bg-opacity-50 min-h-screen flex items-center justify-center p-10">
+    <div className="w-[600px] max-w-[90%]  p-10 rounded-lg bg-white bg-opacity-90">
+        <h1 className="text-center text-lg mb-5">Step 7</h1>
         <Step7Form data={data} />
       </div>
     </div>
+    
   );
 }

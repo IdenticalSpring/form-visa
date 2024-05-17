@@ -1,6 +1,5 @@
 "use client";
 import { saveData } from "@/actions";
-import { Input } from "@/components/ui/input";
 import { countryList } from "@/constants";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { UserInfo } from "@prisma/client";
@@ -61,12 +60,13 @@ export const Step2Form = ({ data }: { data: UserInfo }) => {
   // })
   return (
     <form
-      className="flex flex-col gap-6"
+      className="flex flex-col gap-6 bg-opacity-80"
       onSubmit={handleSubmit(onSubmit, (error) => console.log(error))}
     >
       <div className="grid gap-4">
         <FormItem label="Ngày cấp">
           <DatePicker2
+            className="custom-date-picker"
             defaultValue={new Date(2020, 1, 1)}
             date={watch("id_issue_date")}
             setDate={(date) => setValue("id_issue_date", date ?? new Date())}
@@ -79,6 +79,7 @@ export const Step2Form = ({ data }: { data: UserInfo }) => {
         </FormItem>
         <FormItem label="Ngày cấp">
           <DatePicker2
+          className="custom-date-picker"
             defaultValue={new Date(2020, 1, 1)}
             date={watch("id_expire_date")}
             setDate={(date) => setValue("id_expire_date", date ?? new Date())}
@@ -102,7 +103,7 @@ export const Step2Form = ({ data }: { data: UserInfo }) => {
           )}
         </FormItem>
         <FormItem label="Thành phố cấp">
-          <Input {...register("id_city_receive")} />
+          <input {...register("id_city_receive")} />
           {errors.id_city_receive && (
             <p className="text-rose-500 text-sm mt-2">
               {errors.id_city_receive.message}
@@ -128,7 +129,7 @@ export const Step2Form = ({ data }: { data: UserInfo }) => {
         </FormItem>
         {watch("is_id_had_been_lost") == 1 && (
           <FormItem label="Hãy cho biết lí do mất ?">
-            <Input {...register("id_lost_reason")} />
+            <input {...register("id_lost_reason")} />
             {errors.id_lost_reason && (
               <p className="text-rose-500 text-sm mt-2">
                 {errors.id_lost_reason.message}
@@ -140,14 +141,14 @@ export const Step2Form = ({ data }: { data: UserInfo }) => {
       <div className="flex items-center justify-end gap-4">
         <Button
           type="submit"
-          className=""
+          className="bg-white text-gray-700"
           variant={"ghost"}
           onClick={() => router.push(`/thong-tin-ca-nhan?id=${data.id}`)}
         >
           <ArrowLeft />
           Trở về
         </Button>
-        <Button type="submit" className="bg-primary">
+        <Button type="submit" className="text-white capitalize bg-[#3b6b87] hover:bg-[#a2c5d4]">
           Tiếp tục
         </Button>
       </div>

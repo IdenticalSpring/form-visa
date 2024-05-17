@@ -1,5 +1,4 @@
 "use client";
-import { Input } from "@/components/ui/input";
 import { countryList } from "@/constants";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Gender, UserInfo } from "@prisma/client";
@@ -105,12 +104,12 @@ export const Step1Form = ({ data }: { data?: UserInfo }) => {
   // })
   return (
     <form
-      className="flex flex-col gap-6"
+      className="flex flex-col gap-6 "
       onSubmit={handleSubmit(onSubmit, (error) => console.log(error))}
     >
       <div className="grid  gap-4">
         <FormItem label="Họ và tên theo hộ chiếu">
-          <Input {...register("name")} />
+          <input {...register("name")} />
           {errors.name && (
             <p className="text-rose-500 text-sm mt-2">{errors.name.message}</p>
           )}
@@ -118,11 +117,11 @@ export const Step1Form = ({ data }: { data?: UserInfo }) => {
         <FormItem label="Giới tính">
           <RadioGroup
             defaultValue={data?.gender ?? "Male"}
-            className="flex gap-6"
+            className="radio-group"
             onValueChange={(value: Gender) => setValue("gender", value)}
           >
             <div className="flex items-center space-x-2">
-              <RadioGroupItem value="Male" id="r1" />
+              <RadioGroupItem   value="Male" id="r1" />
               <Label htmlFor="r1">Name</Label>
             </div>
             <div className="flex items-center space-x-2">
@@ -141,7 +140,7 @@ export const Step1Form = ({ data }: { data?: UserInfo }) => {
           )}
         </FormItem>
         <FormItem label="Tên khác">
-          <Input {...register("name_alias")} />
+          <input {...register("name_alias")} />
           {errors.name_alias && (
             <p className="text-rose-500 text-sm mt-2">
               {errors.name_alias.message}
@@ -150,6 +149,8 @@ export const Step1Form = ({ data }: { data?: UserInfo }) => {
         </FormItem>
         <FormItem label="Ngày tháng năm sinh">
           <DatePicker2
+            className=""
+
             date={watch("dob")}
             setDate={(date) => setValue("dob", date ?? new Date())}
           />
@@ -158,7 +159,7 @@ export const Step1Form = ({ data }: { data?: UserInfo }) => {
           )}
         </FormItem>
         <FormItem label="Nơi sinh">
-          <Input {...register("pob")} />
+          <input {...register("pob")} />
           {errors.pob && (
             <p className="text-rose-500 text-sm mt-2">{errors.pob.message}</p>
           )}
@@ -222,7 +223,7 @@ export const Step1Form = ({ data }: { data?: UserInfo }) => {
           )}
         </FormItem>
         <FormItem label="Nơi sinh của vợ/chồng">
-          <Input {...register("husband_wife_pob")} />
+          <input {...register("husband_wife_pob")} />
           {errors.husband_wife_pob && (
             <p className="text-rose-500 text-sm mt-2">
               {errors.husband_wife_pob.message}
@@ -309,7 +310,7 @@ export const Step1Form = ({ data }: { data?: UserInfo }) => {
           </FormItem>
         )}
         <FormItem label="Địa chỉ ghi trên hộ khẩu?">
-          <Input {...register("address_on_paper")} />
+          <input {...register("address_on_paper")} />
           {errors.address_on_paper && (
             <p className="text-rose-500 text-sm mt-2">
               {errors.address_on_paper.message}
@@ -317,7 +318,7 @@ export const Step1Form = ({ data }: { data?: UserInfo }) => {
           )}
         </FormItem>
         <FormItem label="Địa chỉ nơi ở hiện tại?">
-          <Input {...register("current_address")} />
+          <input {...register("current_address")} />
           {errors.current_address && (
             <p className="text-rose-500 text-sm mt-2">
               {errors.current_address.message}
@@ -325,7 +326,7 @@ export const Step1Form = ({ data }: { data?: UserInfo }) => {
           )}
         </FormItem>
         <FormItem label="Số điện thoại di động?">
-          <Input
+          <input
             {...register("phone_number")}
             onInput={(evt) => {
               var inputValue = evt.currentTarget.value;
@@ -343,14 +344,14 @@ export const Step1Form = ({ data }: { data?: UserInfo }) => {
       <div className="flex items-center justify-end gap-4">
         <Button
           type="submit"
-          className=""
+          className="bg-white text-gray-700"
           variant={"ghost"}
           onClick={() => router.push(`/`)}
         >
           <ArrowLeft />
           Trở về
         </Button>
-        <Button type="submit" className="bg-primary">
+        <Button type="submit" className="text-white capitalize bg-[#3b6b87] hover:bg-[#a2c5d4] ">
           Tiếp tục
         </Button>
       </div>

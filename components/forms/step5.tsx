@@ -54,7 +54,7 @@ export const Step5Form = ({ data }: { data: UserInfo }) => {
   };
   return (
     <form
-      className="flex flex-col gap-6"
+      className="flex flex-col gap-6 bg-opacity-80"
       onSubmit={handleSubmit(onSubmit, (error) => console.log(error))}
     >
       <div className="grid gap-4">
@@ -72,7 +72,7 @@ export const Step5Form = ({ data }: { data: UserInfo }) => {
           )}
         </FormItem>
         <FormItem label="Tên trường">
-          <Input {...register("school_name")} />
+          <input {...register("school_name")} />
           {errors.school_name && (
             <p className="text-rose-500 text-sm mt-2">
               {errors.school_name.message}
@@ -80,7 +80,7 @@ export const Step5Form = ({ data }: { data: UserInfo }) => {
           )}
         </FormItem>
         <FormItem label="Ngành học">
-          <Input {...register("major")} />
+          <input {...register("major")} />
           {errors.major && (
             <p className="text-rose-500 text-sm mt-2">{errors.major.message}</p>
           )}
@@ -111,7 +111,7 @@ export const Step5Form = ({ data }: { data: UserInfo }) => {
       <div className="flex items-center justify-end gap-4">
         <Button
           type="submit"
-          className=""
+          className="bg-white text-gray-700"
           variant={"ghost"}
           onClick={() =>
             router.push(`/thong-tin-cong-viec-truoc-day?id=${data.id}`)
@@ -120,7 +120,7 @@ export const Step5Form = ({ data }: { data: UserInfo }) => {
           <ArrowLeft />
           Trở về
         </Button>
-        <Button type="submit" className="bg-primary">
+        <Button type="submit" className="text-white capitalize bg-[#3b6b87] hover:bg-[#a2c5d4]">
           Tiếp tục
         </Button>
       </div>

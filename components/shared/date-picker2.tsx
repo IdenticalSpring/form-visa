@@ -12,10 +12,12 @@ import {
 import { cn } from "@/lib/utils";
 import Calendar, { CalendarProps } from "react-calendar";
 import "react-calendar/dist/Calendar.css";
+
 interface Props extends CalendarProps {
   date: Date | undefined;
   setDate: (date: Date) => void;
 }
+
 export function DatePicker2({
   date,
   setDate,
@@ -28,7 +30,7 @@ export function DatePicker2({
         <Button
           variant={"outline"}
           className={cn(
-            "w-full  justify-start text-left font-normal border-2 border-black focus:ring-2 focus:border-white focus:ring-offset-0 focus:ring-primary focus:bg-light-primary flex h-10 rounded-lg bg-white px-3 py-2 text-sm  file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-slate-500 focus:outline-none  disabled:cursor-not-allowed disabled:opacity-50 dark:border-slate-800 dark:bg-slate-950 dark:ring-offset-slate-950 dark:placeholder:text-slate-400 dark:focus-visible:ring-slate-300",
+            "w-full justify-start text-left font-normal border-0.3 border-[#3b6b87] focus:ring-2 focus:border-[#3b6b87] focus:ring-offset-0 focus:ring-[#3b6b87] focus:bg-[#a2c5d4] flex h-10 rounded-lg bg-white px-3 py-2 text-sm file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-slate-500 focus:outline-none disabled:cursor-not-allowed disabled:opacity-50 dark:border-[#3b6b87] dark:ring-offset-[#3b6b87] dark:placeholder:text-slate-400 dark:focus-visible:ring-slate-300",
             !date && "text-muted-foreground"
           )}
         >

@@ -71,7 +71,7 @@ export const Step6Form = ({ data }: { data: UserInfo }) => {
   };
   return (
     <form
-      className="flex flex-col gap-6"
+      className="flex flex-col gap-6 bg-opacity-80"
       onSubmit={handleSubmit(onSubmit, (error) => console.log(error))}
     >
       <div className="grid gap-4">
@@ -130,8 +130,9 @@ export const Step6Form = ({ data }: { data: UserInfo }) => {
         <FormItem
           id="relatives_info_living_in_visiting_country"
           label="Ghi rõ thông tin người thân"
+
         >
-          <Input {...register("relatives_info_living_in_visiting_country")} />
+          <input {...register("relatives_info_living_in_visiting_country")} />
           {errors.relatives_info_living_in_visiting_country && (
             <p className="text-rose-500 text-sm mt-2">
               {errors.relatives_info_living_in_visiting_country.message}
@@ -142,7 +143,7 @@ export const Step6Form = ({ data }: { data: UserInfo }) => {
           id="relationship_with_relatives"
           label="Mối quan hệ với đương đơn"
         >
-          <Input {...register("relationship_with_relatives")} />
+          <input {...register("relationship_with_relatives")} />
           {errors.relationship_with_relatives && (
             <p className="text-rose-500 text-sm mt-2">
               {errors.relationship_with_relatives.message}
@@ -169,14 +170,14 @@ export const Step6Form = ({ data }: { data: UserInfo }) => {
       <div className="flex items-center justify-end gap-4">
         <Button
           type="submit"
-          className=""
+          className="bg-white text-gray-700"
           variant={"ghost"}
           onClick={() => router.push(`/trinh-do-hoc-van?id=${data.id}`)}
         >
           <ArrowLeft />
           Trở về
         </Button>
-        <Button type="submit" className="bg-primary">
+        <Button type="submit" className="text-white capitalize bg-[#3b6b87] hover:bg-[#a2c5d4]">
           Tiếp tục
         </Button>
       </div>

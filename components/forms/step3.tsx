@@ -91,7 +91,7 @@ export const Step3Form = ({ data }: { data: UserInfo }) => {
   // })
   return (
     <form
-      className="flex flex-col gap-6"
+      className="flex flex-col gap-6 bg-opacity-80"
       onSubmit={handleSubmit(onSubmit, (error) => console.log(error))}
     >
       <div className="grid  gap-4">
@@ -109,7 +109,7 @@ export const Step3Form = ({ data }: { data: UserInfo }) => {
           )}
         </FormItem>
         <FormItem label="Nơi làm việc">
-          <Input {...register("current_job_address")} />
+          <input {...register("current_job_address")} />
           {errors.current_job_address && (
             <p className="text-rose-500 text-sm mt-2">
               {errors.current_job_address.message}
@@ -132,7 +132,7 @@ export const Step3Form = ({ data }: { data: UserInfo }) => {
           id="current_company_phone_number"
           label="Số điện thoại công ty"
         >
-          <Input
+          <input
             {...register("current_company_phone_number")}
             onInput={(evt) => {
               var inputValue = evt.currentTarget.value;
@@ -147,7 +147,7 @@ export const Step3Form = ({ data }: { data: UserInfo }) => {
           )}
         </FormItem>
         <FormItem label="Chức vụ">
-          <Input {...register("current_job_title")} />
+          <input {...register("current_job_title")} />
           {errors.current_job_title && (
             <p className="text-rose-500 text-sm mt-2">
               {errors.current_job_title.message}
@@ -155,7 +155,7 @@ export const Step3Form = ({ data }: { data: UserInfo }) => {
           )}
         </FormItem>
         <FormItem label="Mức lương hàng tháng(vnd)">
-          <Input
+          <input
             {...register("current_job_salary", { valueAsNumber: true })}
             onInput={(evt) => {
               var inputValue = evt.currentTarget.value;
@@ -170,8 +170,8 @@ export const Step3Form = ({ data }: { data: UserInfo }) => {
           )}
         </FormItem>
         <FormItem label="Mô tả công việc">
-          <Textarea
-            className="w-full border-black rounded-lg border-2"
+          <Textarea 
+            className="w-full border-[#3b6b87] border-0.3 rounded-md focus-visible:ring-0.5 focus-visible:border-[#3b6b87] focus-visible:ring-offset-0 focus-visible:ring-[#3b6b87] focus-visible:bg-[#a2c5d4]"
             {...register("current_job_detail")}
           />
           {errors.current_job_detail && (
@@ -184,14 +184,14 @@ export const Step3Form = ({ data }: { data: UserInfo }) => {
       <div className="flex items-center justify-end gap-4">
         <Button
           type="submit"
-          className=""
+          className="bg-white text-gray-700"
           variant={"ghost"}
           onClick={() => router.push(`/thong-tin-ho-chieu?id=${data.id}`)}
         >
           <ArrowLeft />
           Trở về
         </Button>
-        <Button type="submit" className="bg-primary">
+        <Button type="submit" className="text-white capitalize bg-[#3b6b87] hover:bg-[#a2c5d4]">
           Tiếp tục
         </Button>
       </div>
