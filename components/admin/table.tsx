@@ -82,6 +82,9 @@ interface UserTableProps {
 }
 
 const UserTable: React.FC<UserTableProps> = ({ users }) => {
+  const [searchName, setSearchName] = useState("");
+  const [searchPhone, setSearchPhone] = useState("");
+  const [searchEmail, setSearchEmail] = useState("");
   const [selectedUser, setSelectedUser] = useState<UserInfo | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -95,19 +98,40 @@ const UserTable: React.FC<UserTableProps> = ({ users }) => {
     setSelectedUser(null);
   };
 
+  const filteredUsers = users.filter(user => {
+    return (
+      (user.name?.toLowerCase().includes(searchName.toLowerCase()) ?? false) &&
+      (user.phone_number?.includes(searchPhone) ?? false) &&
+      (user.email?.toLowerCase().includes(searchEmail.toLowerCase()) ?? false)
+    );
+  });
+
   return (
     <div className="wrapper">
       <div className="header flex justify-between">
         <div className="header-left w-80">
-          <input style={{ width: '100%' }} placeholder="All Types" />
+          <input
+            style={{ width: '100%' }}
+            placeholder="Search Name"
+            value={searchName}
+            onChange={e => setSearchName(e.target.value)}
+          />
         </div>
-        <div className="header-right w-auto flex items-center gap-4">
-          <input placeholder="Search" />
-          <select name="" id="" className="border rounded">
-            <option value="">Column</option>
-            <option value="">Rows</option>
-          </select>
-          <Button>Filter</Button>
+        <div className="header-right w-80">
+          <input
+            style={{ width: '100%' }}
+            placeholder="Search Phone"
+            value={searchPhone}
+            onChange={e => setSearchPhone(e.target.value)}
+          />
+        </div>
+        <div className="header-right w-80">
+          <input
+            style={{ width: '100%' }}
+            placeholder="Search Email"
+            value={searchEmail}
+            onChange={e => setSearchEmail(e.target.value)}
+          />
         </div>
       </div>
       <div className="body-content mt-6 overflow-x-auto" style={{ background: "#FFFFFF" }}>
@@ -121,7 +145,7 @@ const UserTable: React.FC<UserTableProps> = ({ users }) => {
             </tr>
           </thead>
           <tbody>
-            {users.map(user => (
+            {filteredUsers.map(user => (
               <tr key={user.id}>
                 <td className="border p-2">{user.name}</td>
                 <td className="border p-2">{user.phone_number}</td>
