@@ -41,6 +41,7 @@ textarea:disabled {
   overflow: hidden;
   background: url('../public/background.jpg') no-repeat center center fixed;
   background-size: cover;
+  padding: 0;
 }
 
 .form-item {
