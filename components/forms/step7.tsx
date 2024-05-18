@@ -118,7 +118,6 @@ export const Step7Form = ({ data }: { data: UserInfo }) => {
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     setLoading(true);
   
-    setTimeout(async () => {
       const rs = await saveData({
         ...values,
         is_lived_in_visa_coutry: values.is_lived_in_visa_coutry ? true : false,
@@ -140,7 +139,6 @@ export const Step7Form = ({ data }: { data: UserInfo }) => {
       }
   
       setLoading(false);
-    }, 2000);
   };
   
   const handleBackClick = (e: React.MouseEvent<HTMLButtonElement>) => {

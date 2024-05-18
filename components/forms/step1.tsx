@@ -132,7 +132,6 @@ export const Step1Form = ({ data }: { data?: UserInfo }) => {
 
   const onSubmit = async (value: z.infer<typeof formSchema>) => {
     setLoading(true);
-    setTimeout(async () => {
       const { is_has_other_nationality, ...rest } = value;
       const rs = await saveData({
         ...rest,
@@ -141,7 +140,6 @@ export const Step1Form = ({ data }: { data?: UserInfo }) => {
       });
       setLoading(false);
       if (rs === "ok") router.push(`/thong-tin-ho-chieu?id=${data?.id}`);
-    }, 2000);
   };
   
   const handleBackClick = (e: React.MouseEvent<HTMLButtonElement>) => {

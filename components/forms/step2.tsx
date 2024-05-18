@@ -89,12 +89,10 @@ export const Step2Form = ({ data }: { data: UserInfo }) => {
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     setLoading(true);
-    setTimeout(async () => {
       const { is_id_had_been_lost, ...rest } = values;
       const rs = await saveData({ ...rest, id: data.id });
       if (rs == "ok") router.push(`/thong-tin-cong-viec-hien-tai?id=${data?.id}`);
       setLoading(false);
-    }, 2000);
   };
   
 

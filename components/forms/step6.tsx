@@ -79,7 +79,6 @@ export const Step6Form = ({ data }: { data: UserInfo }) => {
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     setLoading(true);
   
-    setTimeout(async () => {
       const { ...rest } = values;
       const rs = await saveData({
         ...rest,
@@ -91,7 +90,6 @@ export const Step6Form = ({ data }: { data: UserInfo }) => {
         router.push(`/thong-tin-du-lich?id=${data.id}`);
       }
       setLoading(false);
-    }, 2000);
   };
   
   const handleBackClick = (e: React.MouseEvent<HTMLButtonElement>) => {
