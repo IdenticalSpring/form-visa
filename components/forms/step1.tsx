@@ -54,7 +54,7 @@ const formSchema = z.object({
     .string({ message: "Vui lòng nhập trường này" })
     .refine(
       (val) => /^0[35789]\d{8}$/.test(val),
-      "Số điện thoại phải bắt đầu bằng 0 và theo sau là 3, 5, 7, 8, hoặc 9 và phải có 10 chữ số"
+      "Số điện thoại không hợp lệ"
     ),
 });
 

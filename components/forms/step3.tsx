@@ -102,7 +102,7 @@ export const Step3Form = ({ data }: { data: UserInfo }) => {
     if (!pattern.test(value)) {
       setError("current_company_phone_number", {
         type: "manual",
-        message: "Số điện thoại phải bắt đầu bằng 0 và theo sau là 3, 5, 7, 8, hoặc 9 và phải có 10 chữ số",
+        message: "Số điện thoại không hợp lệ",
       });
     } else {
       clearErrors("current_company_phone_number");
