@@ -26,6 +26,7 @@ const formSchema = z.object({
 export const Step4Form = ({ data }: { data: UserInfo }) => {
   const router = useRouter();
   const [isInitialLoad, setIsInitialLoad] = useState(true);
+  const [loading, setLoading] = useState(false);
 
   const {
     register,
@@ -70,13 +71,21 @@ export const Step4Form = ({ data }: { data: UserInfo }) => {
   }, [watchedValues, isInitialLoad]);
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
-    const { ...rest } = values;
-    const rs = await saveData({
-      ...rest,
-      id: data.id,
-    });
-    if (rs == "ok") router.push(`/trinh-do-hoc-van?id=${data.id}`);
+    setLoading(true);
+  
+    setTimeout(async () => {
+      const { ...rest } = values;
+      const rs = await saveData({
+        ...rest,
+        id: data.id,
+      });
+      if (rs == "ok") {
+        router.push(`/trinh-do-hoc-van?id=${data.id}`);
+      }
+      setLoading(false);
+    }, 2000);
   };
+  
   const handleBackClick = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     router.push(`/thong-tin-cong-viec-hien-tai?id=${data.id}`);
@@ -144,7 +153,9 @@ export const Step4Form = ({ data }: { data: UserInfo }) => {
           <ArrowLeft />
           Trở về
         </Button>
-        <Button type="submit" className="text-white capitalize bg-[#3b6b87] hover:bg-[#a2c5d4]">
+        <Button type="submit" className="text-white capitalize bg-[#3b6b87] hover:bg-[#a2c5d4]"
+              loading={loading}
+              >
           Tiếp tục
         </Button>
       </div>

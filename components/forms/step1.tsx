@@ -62,6 +62,7 @@ export const Step1Form = ({ data }: { data?: UserInfo }) => {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [isInitialLoad, setIsInitialLoad] = useState(true);
+  const [loading, setLoading] = useState(false);
 
   const {
     register,
@@ -127,16 +128,22 @@ export const Step1Form = ({ data }: { data?: UserInfo }) => {
     }
   };
   
+  
 
   const onSubmit = async (value: z.infer<typeof formSchema>) => {
-    const { is_has_other_nationality, ...rest } = value;
-    const rs = await saveData({
-      ...rest,
-      id: data?.id,
-      is_has_kid: value.is_has_kid ? true : false,
-    });
-    if (rs === "ok") router.push(`/thong-tin-ho-chieu?id=${data?.id}`);
+    setLoading(true);
+    setTimeout(async () => {
+      const { is_has_other_nationality, ...rest } = value;
+      const rs = await saveData({
+        ...rest,
+        id: data?.id,
+        is_has_kid: value.is_has_kid ? true : false,
+      });
+      setLoading(false);
+      if (rs === "ok") router.push(`/thong-tin-ho-chieu?id=${data?.id}`);
+    }, 2000);
   };
+  
   const handleBackClick = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     router.push(`/`);
@@ -368,6 +375,7 @@ export const Step1Form = ({ data }: { data?: UserInfo }) => {
     <Button
       type="submit"
       className="text-white capitalize bg-[#3b6b87] hover:bg-[#a2c5d4]"
+      loading={loading}
     >
       Tiếp tục
     </Button>

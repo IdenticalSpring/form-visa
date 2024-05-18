@@ -15,7 +15,6 @@ export default async function Page({
   const data = await prisma.userInfo.findFirst({ where: { id } });
 
   if (!data) {
-    // Redirect or show an error message if data is null
     redirect("/");
     return null;
   }

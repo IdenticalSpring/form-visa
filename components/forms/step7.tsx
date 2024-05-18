@@ -47,6 +47,7 @@ export const Step7Form = ({ data }: { data: UserInfo }) => {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [isInitialLoad, setIsInitialLoad] = useState(true);
+  const [loading, setLoading] = useState(false);
 
   const {
     register,
@@ -115,25 +116,33 @@ export const Step7Form = ({ data }: { data: UserInfo }) => {
   }, [watchedValues, isInitialLoad]);
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
-    const rs = await saveData({
-      ...values,
-      is_lived_in_visa_coutry: values.is_lived_in_visa_coutry ? true : false,
-      is_denied_visa: values.is_denied_visa ? true : false,
-      is_belong_to_some_tribe_or_party: values.is_belong_to_some_tribe_or_party ? true : false,
-      is_work_for_some_charity_organization: values.is_work_for_some_charity_organization ? true : false,
-      is_weapons_trained: values.is_weapons_trained ? true : false,
-      is_worked_on_army: values.is_worked_on_army ? true : false,
-      is_has_some_sick: values.is_has_some_sick ? true : false,
-      is_renounce_citizenship: values.is_renounce_citizenship ? true : false,
-      is_had_been_arrested_by_crime: values.is_had_been_arrested_by_crime ? true : false,
-      is_had_visa_country_not_used: values.is_had_visa_country_not_used ? true : false,
-      id: data.id,
-    });
-    if (rs == "ok") {
-      toast.success("Lưu thành công");
-      router.push("/");
-    }
+    setLoading(true);
+  
+    setTimeout(async () => {
+      const rs = await saveData({
+        ...values,
+        is_lived_in_visa_coutry: values.is_lived_in_visa_coutry ? true : false,
+        is_denied_visa: values.is_denied_visa ? true : false,
+        is_belong_to_some_tribe_or_party: values.is_belong_to_some_tribe_or_party ? true : false,
+        is_work_for_some_charity_organization: values.is_work_for_some_charity_organization ? true : false,
+        is_weapons_trained: values.is_weapons_trained ? true : false,
+        is_worked_on_army: values.is_worked_on_army ? true : false,
+        is_has_some_sick: values.is_has_some_sick ? true : false,
+        is_renounce_citizenship: values.is_renounce_citizenship ? true : false,
+        is_had_been_arrested_by_crime: values.is_had_been_arrested_by_crime ? true : false,
+        is_had_visa_country_not_used: values.is_had_visa_country_not_used ? true : false,
+        id: data.id,
+      });
+  
+      if (rs == "ok") {
+        toast.success("Lưu thành công");
+        router.push("/");
+      }
+  
+      setLoading(false);
+    }, 2000);
   };
+  
   const handleBackClick = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     router.push(`/thong-tin-gia-dinh?id=${data.id}`);
@@ -484,7 +493,9 @@ export const Step7Form = ({ data }: { data: UserInfo }) => {
           <ArrowLeft />
           Trở về
         </Button>
-        <Button type="submit" className="text-white capitalize bg-[#3b6b87] hover:bg-[#a2c5d4]">
+        <Button type="submit" className="text-white capitalize bg-[#3b6b87] hover:bg-[#a2c5d4]"
+              loading={loading}
+              >
           Tiếp tục
         </Button>
       </div>

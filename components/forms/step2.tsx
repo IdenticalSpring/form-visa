@@ -14,6 +14,7 @@ import { Button } from "../ui/button";
 import { useEffect, useState } from "react";
 
 const formSchema = z.object({
+  
   id_issue_date: z.date({ message: "Vui lòng nhập trường này" }),
   id_expire_date: z.date({ message: "Vui lòng nhập trường này" }),
   id_country_receive: z
@@ -40,6 +41,7 @@ export const Step2Form = ({ data }: { data: UserInfo }) => {
   console.log(searchParams.get("country"), searchParams.get("email"));
 
   const [isInitialLoad, setIsInitialLoad] = useState(true);
+  const [loading, setLoading] = useState(false);
 
   const {
     register,
@@ -86,10 +88,15 @@ export const Step2Form = ({ data }: { data: UserInfo }) => {
   }, [watchedValues, isInitialLoad]);
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
-    const { is_id_had_been_lost, ...rest } = values;
-    const rs = await saveData({ ...rest, id: data.id });
-    if (rs == "ok") router.push(`/thong-tin-cong-viec-hien-tai?id=${data?.id}`);
+    setLoading(true);
+    setTimeout(async () => {
+      const { is_id_had_been_lost, ...rest } = values;
+      const rs = await saveData({ ...rest, id: data.id });
+      if (rs == "ok") router.push(`/thong-tin-cong-viec-hien-tai?id=${data?.id}`);
+      setLoading(false);
+    }, 2000);
   };
+  
 
   const handleBackClick = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
@@ -189,6 +196,8 @@ export const Step2Form = ({ data }: { data: UserInfo }) => {
         <Button
           type="submit"
           className="text-white capitalize bg-[#3b6b87] hover:bg-[#a2c5d4]"
+          loading={loading}
+
         >
           Tiếp tục
         </Button>

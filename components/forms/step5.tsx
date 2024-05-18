@@ -31,6 +31,7 @@ export const Step5Form = ({ data }: { data: UserInfo }) => {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [isInitialLoad, setIsInitialLoad] = useState(true);
+  const [loading, setLoading] = useState(false);
 
   const {
     register,
@@ -76,12 +77,20 @@ export const Step5Form = ({ data }: { data: UserInfo }) => {
   }, [watchedValues, isInitialLoad]);
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
-    const rs = await saveData({
-      ...values,
-      id: data.id,
-    });
-    if (rs == "ok") router.push(`/thong-tin-gia-dinh?id=${data.id}`);
+    setLoading(true);
+  
+    setTimeout(async () => {
+      const rs = await saveData({
+        ...values,
+        id: data.id,
+      });
+      if (rs == "ok") {
+        router.push(`/thong-tin-gia-dinh?id=${data.id}`);
+      }
+      setLoading(false);
+    }, 2000);
   };
+  
   const handleBackClick = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     router.push(`/thong-tin-cong-viec-truoc-day?id=${data.id}`);
@@ -152,7 +161,9 @@ export const Step5Form = ({ data }: { data: UserInfo }) => {
           <ArrowLeft />
           Trở về
         </Button>
-        <Button type="submit" className="text-white capitalize bg-[#3b6b87] hover:bg-[#a2c5d4]">
+        <Button type="submit" className="text-white capitalize bg-[#3b6b87] hover:bg-[#a2c5d4]"
+              loading={loading}
+              >
           Tiếp tục
         </Button>
       </div>

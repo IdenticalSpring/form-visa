@@ -52,6 +52,7 @@ export const Step3Form = ({ data }: { data: UserInfo }) => {
   const searchParams = useSearchParams();
   console.log(searchParams.get("country"), searchParams.get("email"));
   const [isInitialLoad, setIsInitialLoad] = useState(true);
+  const [loading, setLoading] = useState(false);
 
   const {
     register,
@@ -109,15 +110,22 @@ export const Step3Form = ({ data }: { data: UserInfo }) => {
   };
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
-    const { ...rest } = values;
-    const rs = await saveData({
-      ...rest,
-      current_job_salary: values.current_job_salary,
-      id: data.id,
-    });
-    if (rs == "ok")
-      router.push(`/thong-tin-cong-viec-truoc-day?id=${data?.id}`);
+    setLoading(true);
+  
+    setTimeout(async () => {
+      const { ...rest } = values;
+      const rs = await saveData({
+        ...rest,
+        current_job_salary: values.current_job_salary,
+        id: data.id,
+      });
+      if (rs == "ok") {
+        router.push(`/thong-tin-cong-viec-truoc-day?id=${data?.id}`);
+      }
+      setLoading(false);
+    }, 2000);
   };
+  
 
   const handleBackClick = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
@@ -226,7 +234,10 @@ export const Step3Form = ({ data }: { data: UserInfo }) => {
           <ArrowLeft />
           Trở về
         </Button>
-        <Button type="submit" className="text-white capitalize bg-[#3b6b87] hover:bg-[#a2c5d4]">
+        <Button type="submit" className="text-white capitalize bg-[#3b6b87] hover:bg-[#a2c5d4]"
+              loading={loading}
+              >
+          
           Tiếp tục
         </Button>
       </div>
