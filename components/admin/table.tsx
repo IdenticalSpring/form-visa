@@ -213,7 +213,7 @@ const UserTable: React.FC<{ users: UserInfo[] }> = ({ users }) => {
         ),
       },
     ];
-  }, [selectedFields]);
+  }, [selectedFields, setClose, setOpen]);
 
   const table = useReactTable({
     data: users,

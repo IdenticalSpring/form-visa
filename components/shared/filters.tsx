@@ -190,6 +190,7 @@ export const Filter = ({
         if (s.id === header.id) {
           return (
             <select
+              key={s.id}
               className="w-[150px] m-auto text-gray-500 text-sm border-gray-800 border border-opacity-30 rounded-sm h-10"
               value={(header.column.getFilterValue() as string) || ""}
               onChange={(e) => header.column.setFilterValue(e.target.value)}
