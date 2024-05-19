@@ -100,21 +100,6 @@ textarea:disabled {
   min-width: 100%;
 }
 
-button {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 2.5rem;
-  width: 100%;
-  background-color: #3b6b87;
-  color: black;
-  border: none;
-  border-radius: 0.25rem;
-  font-size: 0.875rem;
-  cursor: pointer;
-  transition: background-color 0.3s;
-}
-
 button:hover {
   background-color: #a2c5d4;
 }

@@ -93,9 +93,8 @@ model UserInfo {
   is_has_some_sick Boolean?
   is_had_been_arrested_by_crime Boolean?
   is_renounce_citizenship Boolean?
-  //is done 
+  created_at DateTime @default(now())
   is_done_filling Boolean?
-
 }
 enum Gender {
   Male

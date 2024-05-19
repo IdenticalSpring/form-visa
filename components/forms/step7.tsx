@@ -152,6 +152,7 @@ export const Step7Form = ({ data }: { data: UserInfo }) => {
         ? true
         : false,
       id: data.id,
+      is_done_filling: true,
     });
 
     if (rs == "ok") {

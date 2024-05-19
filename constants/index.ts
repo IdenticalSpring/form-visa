@@ -249,3 +249,10 @@ export const countryList = [
   "Zimbabwe",
   "Åland Islands",
 ];
+export const countryFields = [
+  "country",
+  "nationality",
+  "other_nationality",
+  "visa_to_country",
+  "id_country_receive",
+];

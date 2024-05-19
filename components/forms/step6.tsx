@@ -125,7 +125,9 @@ export const Step6Form = ({ data }: { data: UserInfo }) => {
         </FormItem>
         <FormItem label="Tình trạng lưu trú ">
           <select className="form-select" {...register("stay_status")}>
-            <option value="Không định cư">Không định cư</option>
+            <option value="Không định cư" defaultChecked>
+              Không định cư
+            </option>
             <option value="Thường trú nhân">Thường trú nhân</option>
             <option value="du học sinh">Du học sinh</option>
             <option value="Công dân">Công dân</option>
