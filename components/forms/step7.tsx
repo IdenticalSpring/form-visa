@@ -52,7 +52,7 @@ export const Step7Form = ({ data }: { data: UserInfo }) => {
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isSubmitting },
     reset,
     watch,
     setValue,
@@ -62,22 +62,32 @@ export const Step7Form = ({ data }: { data: UserInfo }) => {
       accompanying_person: data.accompanying_person ?? "",
       denied_visa_number_of_time: data.denied_visa_number_of_time ?? 0,
       denied_visa_reason: data.denied_visa_reason ?? "",
-      expected_start_date: data.expected_start_date ? new Date(data.expected_start_date) : new Date(),
+      expected_start_date: data.expected_start_date
+        ? new Date(data.expected_start_date)
+        : new Date(),
       foreign_languages: data.foreign_languages ?? "",
       guarantee_documents: data.guarantee_documents ?? "",
-      is_belong_to_some_tribe_or_party: data.is_belong_to_some_tribe_or_party ? 1 : 0,
+      is_belong_to_some_tribe_or_party: data.is_belong_to_some_tribe_or_party
+        ? 1
+        : 0,
       is_denied_visa: data.is_denied_visa ? 1 : 0,
       is_had_been_arrested_by_crime: data.is_had_been_arrested_by_crime ? 1 : 0,
       is_had_visa_country_not_used: data.is_had_visa_country_not_used ? 1 : 0,
       is_has_some_sick: data.is_has_some_sick ? 1 : 0,
       is_lived_in_visa_coutry: data.is_lived_in_visa_coutry ? 1 : 0,
-      is_lived_in_visa_coutry_date: data.is_lived_in_visa_coutry_date ? new Date(data.is_lived_in_visa_coutry_date) : new Date(),
-      is_lived_in_visa_coutry_days_stay: data.is_lived_in_visa_coutry_days_stay ?? 0,
+      is_lived_in_visa_coutry_date: data.is_lived_in_visa_coutry_date
+        ? new Date(data.is_lived_in_visa_coutry_date)
+        : new Date(),
+      is_lived_in_visa_coutry_days_stay:
+        data.is_lived_in_visa_coutry_days_stay ?? 0,
       is_renounce_citizenship: data.is_renounce_citizenship ? 1 : 0,
       is_weapons_trained: data.is_weapons_trained ? 1 : 0,
-      is_work_for_some_charity_organization: data.is_work_for_some_charity_organization ? 1 : 0,
+      is_work_for_some_charity_organization:
+        data.is_work_for_some_charity_organization ? 1 : 0,
       is_worked_on_army: data.is_worked_on_army ? 1 : 0,
-      party_join_date: data.party_join_date ? new Date(data.party_join_date) : new Date(),
+      party_join_date: data.party_join_date
+        ? new Date(data.party_join_date)
+        : new Date(),
       social_network: data.social_network ?? "",
       traveled_countries: data.traveled_countries ?? "",
       trip_payroll_person: data.trip_payroll_person ?? "",
@@ -95,10 +105,14 @@ export const Step7Form = ({ data }: { data: UserInfo }) => {
       if (storedData) {
         const parsedData = JSON.parse(storedData);
         if (parsedData.expected_start_date) {
-          parsedData.expected_start_date = new Date(parsedData.expected_start_date);
+          parsedData.expected_start_date = new Date(
+            parsedData.expected_start_date
+          );
         }
         if (parsedData.is_lived_in_visa_coutry_date) {
-          parsedData.is_lived_in_visa_coutry_date = new Date(parsedData.is_lived_in_visa_coutry_date);
+          parsedData.is_lived_in_visa_coutry_date = new Date(
+            parsedData.is_lived_in_visa_coutry_date
+          );
         }
         if (parsedData.party_join_date) {
           parsedData.party_join_date = new Date(parsedData.party_join_date);
@@ -117,30 +131,37 @@ export const Step7Form = ({ data }: { data: UserInfo }) => {
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     setLoading(true);
-  
-      const rs = await saveData({
-        ...values,
-        is_lived_in_visa_coutry: values.is_lived_in_visa_coutry ? true : false,
-        is_denied_visa: values.is_denied_visa ? true : false,
-        is_belong_to_some_tribe_or_party: values.is_belong_to_some_tribe_or_party ? true : false,
-        is_work_for_some_charity_organization: values.is_work_for_some_charity_organization ? true : false,
-        is_weapons_trained: values.is_weapons_trained ? true : false,
-        is_worked_on_army: values.is_worked_on_army ? true : false,
-        is_has_some_sick: values.is_has_some_sick ? true : false,
-        is_renounce_citizenship: values.is_renounce_citizenship ? true : false,
-        is_had_been_arrested_by_crime: values.is_had_been_arrested_by_crime ? true : false,
-        is_had_visa_country_not_used: values.is_had_visa_country_not_used ? true : false,
-        id: data.id,
-      });
-  
-      if (rs == "ok") {
-        toast.success("Lưu thành công");
-        router.push("/");
-      }
-  
-      setLoading(false);
+
+    const rs = await saveData({
+      ...values,
+      is_lived_in_visa_coutry: values.is_lived_in_visa_coutry ? true : false,
+      is_denied_visa: values.is_denied_visa ? true : false,
+      is_belong_to_some_tribe_or_party: values.is_belong_to_some_tribe_or_party
+        ? true
+        : false,
+      is_work_for_some_charity_organization:
+        values.is_work_for_some_charity_organization ? true : false,
+      is_weapons_trained: values.is_weapons_trained ? true : false,
+      is_worked_on_army: values.is_worked_on_army ? true : false,
+      is_has_some_sick: values.is_has_some_sick ? true : false,
+      is_renounce_citizenship: values.is_renounce_citizenship ? true : false,
+      is_had_been_arrested_by_crime: values.is_had_been_arrested_by_crime
+        ? true
+        : false,
+      is_had_visa_country_not_used: values.is_had_visa_country_not_used
+        ? true
+        : false,
+      id: data.id,
+    });
+
+    if (rs == "ok") {
+      toast.success("Lưu thành công");
+      router.push("/");
+    }
+
+    setLoading(false);
   };
-  
+
   const handleBackClick = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     router.push(`/thong-tin-gia-dinh?id=${data.id}`);
@@ -148,14 +169,16 @@ export const Step7Form = ({ data }: { data: UserInfo }) => {
   return (
     <form
       className="flex flex-col gap-6 bg-opacity-80"
-      onSubmit={handleSubmit(onSubmit, (error) => console.log(error))}
+      onSubmit={handleSubmit(onSubmit)}
     >
       <div className="grid gap-4">
         <FormItem label="Ngày dự tính khởi hành">
           <DatePicker2
             minDate={new Date()}
             date={watch("expected_start_date")}
-            setDate={(date) => setValue("expected_start_date", date ?? new Date())}
+            setDate={(date) =>
+              setValue("expected_start_date", date ?? new Date())
+            }
           />
           {errors.expected_start_date && (
             <p className="text-rose-500 text-sm mt-2">
@@ -241,7 +264,9 @@ export const Step7Form = ({ data }: { data: UserInfo }) => {
         <FormItem label="Ngày tháng năm từng đến">
           <DatePicker2
             date={watch("is_lived_in_visa_coutry_date")}
-            setDate={(date) => setValue("is_lived_in_visa_coutry_date", date ?? new Date())}
+            setDate={(date) =>
+              setValue("is_lived_in_visa_coutry_date", date ?? new Date())
+            }
           />
           {errors.is_lived_in_visa_coutry_date && (
             <p className="text-rose-500 text-sm mt-2">
@@ -325,7 +350,10 @@ export const Step7Form = ({ data }: { data: UserInfo }) => {
         </FormItem>
         <p className="text-sm">* Nếu có, vui lòng cung cấp tên quốc gia</p>
         <FormItem label="Tên quốc gia">
-          <select className="form-select" {...register("visa_country_not_used")}>
+          <select
+            className="form-select"
+            {...register("visa_country_not_used")}
+          >
             {countryList.map((c) => (
               <option key={c}>{c}</option>
             ))}
@@ -491,9 +519,11 @@ export const Step7Form = ({ data }: { data: UserInfo }) => {
           <ArrowLeft />
           Trở về
         </Button>
-        <Button type="submit" className="text-white capitalize bg-[#3b6b87] hover:bg-[#a2c5d4]"
-              loading={loading}
-              >
+        <Button
+          type="submit"
+          className="text-white capitalize bg-[#3b6b87] hover:bg-[#a2c5d4]"
+          loading={loading}
+        >
           Tiếp tục
         </Button>
       </div>

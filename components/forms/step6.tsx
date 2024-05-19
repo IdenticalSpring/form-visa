@@ -39,7 +39,7 @@ export const Step6Form = ({ data }: { data: UserInfo }) => {
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isSubmitting },
     reset,
     watch,
     setValue,
@@ -78,20 +78,22 @@ export const Step6Form = ({ data }: { data: UserInfo }) => {
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     setLoading(true);
-  
-      const { ...rest } = values;
-      const rs = await saveData({
-        ...rest,
-        is_parent_live_in_visiting_country: values.is_parent_live_in_visiting_country ? true : false,
-        is_relatives_living_in_visiting_country: values.is_relatives_living_in_visiting_country ? true : false,
-        id: data.id,
-      });
-      if (rs == "ok") {
-        router.push(`/thong-tin-du-lich?id=${data.id}`);
-      }
-      setLoading(false);
+
+    const { ...rest } = values;
+    const rs = await saveData({
+      ...rest,
+      is_parent_live_in_visiting_country:
+        values.is_parent_live_in_visiting_country ? true : false,
+      is_relatives_living_in_visiting_country:
+        values.is_relatives_living_in_visiting_country ? true : false,
+      id: data.id,
+    });
+    if (rs == "ok") {
+      router.push(`/thong-tin-du-lich?id=${data.id}`);
+    }
+    setLoading(false);
   };
-  
+
   const handleBackClick = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     router.push(`/trinh-do-hoc-van?id=${data.id}`);
@@ -99,7 +101,7 @@ export const Step6Form = ({ data }: { data: UserInfo }) => {
   return (
     <form
       className="flex flex-col gap-6 bg-opacity-80"
-      onSubmit={handleSubmit(onSubmit, (error) => console.log(error))}
+      onSubmit={handleSubmit(onSubmit)}
     >
       <div className="grid gap-4">
         <FormItem
@@ -202,9 +204,11 @@ export const Step6Form = ({ data }: { data: UserInfo }) => {
           <ArrowLeft />
           Trở về
         </Button>
-        <Button type="submit" className="text-white capitalize bg-[#3b6b87] hover:bg-[#a2c5d4]"
-              loading={loading}
-              >
+        <Button
+          type="submit"
+          className="text-white capitalize bg-[#3b6b87] hover:bg-[#a2c5d4]"
+          loading={loading}
+        >
           Tiếp tục
         </Button>
       </div>

@@ -31,7 +31,7 @@ export const Step4Form = ({ data }: { data: UserInfo }) => {
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isSubmitting },
     reset,
     watch,
     setValue,
@@ -39,8 +39,12 @@ export const Step4Form = ({ data }: { data: UserInfo }) => {
     resolver: zodResolver(formSchema),
     defaultValues: {
       old_job: data.old_job ?? "",
-      old_job_end_date: data.old_job_end_date ? new Date(data.old_job_end_date) : new Date(),
-      old_job_start_date: data.old_job_start_date ? new Date(data.old_job_start_date) : new Date(),
+      old_job_end_date: data.old_job_end_date
+        ? new Date(data.old_job_end_date)
+        : new Date(),
+      old_job_start_date: data.old_job_start_date
+        ? new Date(data.old_job_start_date)
+        : new Date(),
       old_job_title: data.old_job_title ?? "",
     },
   });
@@ -53,7 +57,9 @@ export const Step4Form = ({ data }: { data: UserInfo }) => {
       if (storedData) {
         const parsedData = JSON.parse(storedData);
         if (parsedData.old_job_start_date) {
-          parsedData.old_job_start_date = new Date(parsedData.old_job_start_date);
+          parsedData.old_job_start_date = new Date(
+            parsedData.old_job_start_date
+          );
         }
         if (parsedData.old_job_end_date) {
           parsedData.old_job_end_date = new Date(parsedData.old_job_end_date);
@@ -72,18 +78,18 @@ export const Step4Form = ({ data }: { data: UserInfo }) => {
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     setLoading(true);
-  
-      const { ...rest } = values;
-      const rs = await saveData({
-        ...rest,
-        id: data.id,
-      });
-      if (rs == "ok") {
-        router.push(`/trinh-do-hoc-van?id=${data.id}`);
-      }
-      setLoading(false);
+
+    const { ...rest } = values;
+    const rs = await saveData({
+      ...rest,
+      id: data.id,
+    });
+    if (rs == "ok") {
+      router.push(`/trinh-do-hoc-van?id=${data.id}`);
+    }
+    setLoading(false);
   };
-  
+
   const handleBackClick = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     router.push(`/thong-tin-cong-viec-hien-tai?id=${data.id}`);
@@ -91,7 +97,7 @@ export const Step4Form = ({ data }: { data: UserInfo }) => {
   return (
     <form
       className="flex flex-col gap-6 bg-opacity-80"
-      onSubmit={handleSubmit(onSubmit, (error) => console.log(error))}
+      onSubmit={handleSubmit(onSubmit)}
     >
       <div className="grid gap-4">
         <FormItem label="Bạn là">
@@ -145,15 +151,16 @@ export const Step4Form = ({ data }: { data: UserInfo }) => {
           type="submit"
           className="bg-white text-gray-700"
           variant={"ghost"}
-          onClick={handleBackClick      
-          }
+          onClick={handleBackClick}
         >
           <ArrowLeft />
           Trở về
         </Button>
-        <Button type="submit" className="text-white capitalize bg-[#3b6b87] hover:bg-[#a2c5d4]"
-              loading={loading}
-              >
+        <Button
+          type="submit"
+          className="text-white capitalize bg-[#3b6b87] hover:bg-[#a2c5d4]"
+          loading={loading}
+        >
           Tiếp tục
         </Button>
       </div>

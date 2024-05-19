@@ -2,6 +2,7 @@
 
 import { prisma } from "@/lib/db";
 import { UserInfo } from "@prisma/client";
+import { redirect } from "next/navigation";
 
 export const checkReuseableData = async (data: {
   visa_to_country: string;
@@ -32,7 +33,10 @@ export const createNewRecord = async (data: {
   }
 };
 
-export const saveData = async (data: Partial<UserInfo>) => {
+export const saveData = async (
+  data: Partial<UserInfo>,
+  nextStepUrl: string
+) => {
   try {
     let rs;
     if (data.id) {
@@ -50,8 +54,10 @@ export const saveData = async (data: Partial<UserInfo>) => {
     return "ok";
   } catch (e) {
     throw e;
-    // if (e instanceof Error)
-    //   prisma.errorLog.create({ data: { message: e.message } });
-    // return "Some error ";
+    // try {
+    //   if (e instanceof Error)
+    //     prisma.errorLog.create({ data: { message: e.message } });
+    // } catch (e) {}
+    // return "Lỗi hệ thống, hãy thử lại sau";
   }
 };

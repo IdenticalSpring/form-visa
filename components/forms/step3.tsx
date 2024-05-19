@@ -4,7 +4,7 @@ import { countryList } from "@/constants";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { UserInfo } from "@prisma/client";
 import { ArrowLeft } from "lucide-react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { DatePicker } from "../shared/date-picker";
@@ -15,6 +15,7 @@ import { DatePicker2 } from "../shared/date-picker2";
 import { saveData } from "@/actions";
 import validator from "validator";
 import { useEffect, useState } from "react";
+import { useRouter } from "next-nprogress-bar";
 
 const formSchema = z.object({
   current_job: z
@@ -50,14 +51,13 @@ const formSchema = z.object({
 export const Step3Form = ({ data }: { data: UserInfo }) => {
   const router = useRouter();
   const searchParams = useSearchParams();
-  console.log(searchParams.get("country"), searchParams.get("email"));
   const [isInitialLoad, setIsInitialLoad] = useState(true);
   const [loading, setLoading] = useState(false);
 
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isSubmitting },
     reset,
     watch,
     setError,
@@ -71,7 +71,9 @@ export const Step3Form = ({ data }: { data: UserInfo }) => {
       current_job_address: data.current_job_address ?? "",
       current_job_detail: data.current_job_detail ?? "",
       current_job_salary: data.current_job_salary ?? 0,
-      current_job_start_date: data.current_job_start_date ? new Date(data.current_job_start_date) : new Date(),
+      current_job_start_date: data.current_job_start_date
+        ? new Date(data.current_job_start_date)
+        : new Date(),
       current_job_title: data.current_job_title ?? "",
     },
   });
@@ -83,7 +85,9 @@ export const Step3Form = ({ data }: { data: UserInfo }) => {
       if (storedData) {
         const parsedData = JSON.parse(storedData);
         if (parsedData.current_job_start_date) {
-          parsedData.current_job_start_date = new Date(parsedData.current_job_start_date);
+          parsedData.current_job_start_date = new Date(
+            parsedData.current_job_start_date
+          );
         }
         reset(parsedData);
       }
@@ -111,19 +115,18 @@ export const Step3Form = ({ data }: { data: UserInfo }) => {
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     setLoading(true);
-  
-      const { ...rest } = values;
-      const rs = await saveData({
-        ...rest,
-        current_job_salary: values.current_job_salary,
-        id: data.id,
-      });
-      if (rs == "ok") {
-        router.push(`/thong-tin-cong-viec-truoc-day?id=${data?.id}`);
-      }
-      setLoading(false);
+
+    const { ...rest } = values;
+    const rs = await saveData({
+      ...rest,
+      current_job_salary: values.current_job_salary,
+      id: data.id,
+    });
+    if (rs == "ok") {
+      router.push(`/thong-tin-cong-viec-truoc-day?id=${data?.id}`);
+    }
+    setLoading(false);
   };
-  
 
   const handleBackClick = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
@@ -133,7 +136,7 @@ export const Step3Form = ({ data }: { data: UserInfo }) => {
   return (
     <form
       className="flex flex-col gap-6 bg-opacity-80"
-      onSubmit={handleSubmit(onSubmit, (error) => console.log(error))}
+      onSubmit={handleSubmit(onSubmit)}
     >
       <div className="grid gap-4">
         <FormItem label="Bạn là">
@@ -168,24 +171,27 @@ export const Step3Form = ({ data }: { data: UserInfo }) => {
             </p>
           )}
         </FormItem>
-        <FormItem id="current_company_phone_number" label="Số điện thoại công ty">
-  <input
-    {...register("current_company_phone_number")}
-    onInput={(evt) => {
-      let inputValue = evt.currentTarget.value;
-      inputValue = inputValue.replace(/\D/g, ""); // Remove non-numeric characters
-      evt.currentTarget.value = inputValue.slice(0, 10); // Limit to 10 digits
-    }}
-    onBlur={(evt) => {
-      validatePhoneNumber(evt.currentTarget.value);
-    }}
-  />
-  {errors.current_company_phone_number && (
-    <p className="text-rose-500 text-sm mt-2">
-      {errors.current_company_phone_number.message}
-    </p>
-  )}
-</FormItem>
+        <FormItem
+          id="current_company_phone_number"
+          label="Số điện thoại công ty"
+        >
+          <input
+            {...register("current_company_phone_number")}
+            onInput={(evt) => {
+              let inputValue = evt.currentTarget.value;
+              inputValue = inputValue.replace(/\D/g, ""); // Remove non-numeric characters
+              evt.currentTarget.value = inputValue.slice(0, 10); // Limit to 10 digits
+            }}
+            onBlur={(evt) => {
+              validatePhoneNumber(evt.currentTarget.value);
+            }}
+          />
+          {errors.current_company_phone_number && (
+            <p className="text-rose-500 text-sm mt-2">
+              {errors.current_company_phone_number.message}
+            </p>
+          )}
+        </FormItem>
 
         <FormItem label="Chức vụ">
           <input {...register("current_job_title")} />
@@ -211,7 +217,7 @@ export const Step3Form = ({ data }: { data: UserInfo }) => {
           )}
         </FormItem>
         <FormItem label="Mô tả công việc">
-          <Textarea 
+          <Textarea
             className="w-full border-[#3b6b87] border-0.3 rounded-md focus-visible:ring-0.5 focus-visible:border-[#3b6b87] focus-visible:ring-offset-0 focus-visible:ring-[#3b6b87] focus-visible:bg-[#a2c5d4]"
             {...register("current_job_detail")}
           />
@@ -232,10 +238,11 @@ export const Step3Form = ({ data }: { data: UserInfo }) => {
           <ArrowLeft />
           Trở về
         </Button>
-        <Button type="submit" className="text-white capitalize bg-[#3b6b87] hover:bg-[#a2c5d4]"
-              loading={loading}
-              >
-          
+        <Button
+          type="submit"
+          className="text-white capitalize bg-[#3b6b87] hover:bg-[#a2c5d4]"
+          loading={loading}
+        >
           Tiếp tục
         </Button>
       </div>

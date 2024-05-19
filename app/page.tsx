@@ -7,7 +7,7 @@ import { countryList } from "@/constants";
 import { useModal } from "@/providers/modal-provider";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
+import { useRouter } from "next-nprogress-bar";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
@@ -16,7 +16,7 @@ const formSchema = z.object({
   visa_to_country: z.string(),
   email: z
     .string()
-    .min(1, { message: "Vui lòng nhập email." })
+    .min(1, { message: "Vui lòng nhập trường này" })
     .email("Email không hợp lệ."),
 });
 
@@ -26,7 +26,7 @@ export default function Home() {
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isSubmitting },
     reset,
   } = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -57,21 +57,38 @@ export default function Home() {
           className="h-auto mb-10"
         />
         <FormItem label="Quốc gia bạn muốn xin visa">
-          <select className="form-select w-full p-2 border focus-visible:ring-0.5 focus-visible:border-[#3b6b87] focus-visible:ring-offset-0 focus-visible:ring-[#3b6b87] focus-visible:bg-[#a2c5d4] flex h-10 rounded-md bg-white px-3 py-2 text-sm file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-slate-500 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50 dark:border-gray-400 dark:bg-slate-950 dark:ring-offset-slate-950 dark:placeholder:text-slate-400 dark:focus-visible:ring-slate-300" {...register("visa_to_country")}>
+          <select
+            className="form-select w-full p-2 border focus-visible:ring-0.5 focus-visible:border-[#3b6b87] focus-visible:ring-offset-0 focus-visible:ring-[#3b6b87] focus-visible:bg-[#a2c5d4] flex h-10 rounded-md bg-white px-3 py-2 text-sm file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-slate-500 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50 dark:border-gray-400 dark:bg-slate-950 dark:ring-offset-slate-950 dark:placeholder:text-slate-400 dark:focus-visible:ring-slate-300"
+            {...register("visa_to_country")}
+          >
             {countryList.map((c) => (
               <option key={c}>{c}</option>
             ))}
           </select>
+          {errors.visa_to_country && (
+            <p className="text-sm text-rose-500">
+              {errors.visa_to_country.message}
+            </p>
+          )}
         </FormItem>
         <FormItem label="Nhập email của bạn">
-          <input type="email" id="email" className=" p-2 border focus-visible:ring-0.5 focus-visible:border-[#3b6b87] focus-visible:ring-offset-0 focus-visible:ring-[#3b6b87] focus-visible:bg-[#a2c5d4] flex h-10 w-full rounded-md bg-white px-3 py-2 text-sm file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-slate-500 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50 dark:border-gray-400 dark:bg-slate-950 dark:ring-offset-slate-950 dark:placeholder:text-slate-400 dark:focus-visible:ring-slate-300" {...register("email")} />
+          <input
+            type="email"
+            id="email"
+            className=" p-2 border focus-visible:ring-0.5 focus-visible:border-[#3b6b87] focus-visible:ring-offset-0 focus-visible:ring-[#3b6b87] focus-visible:bg-[#a2c5d4] flex h-10 w-full rounded-md bg-white px-3 py-2 text-sm file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-slate-500 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50 dark:border-gray-400 dark:bg-slate-950 dark:ring-offset-slate-950 dark:placeholder:text-slate-400 dark:focus-visible:ring-slate-300"
+            {...register("email")}
+          />
+          {errors.email && (
+            <p className="text-sm text-rose-500">{errors.email.message}</p>
+          )}
         </FormItem>
-        <Button className="text-white capitalize bg-[#3b6b87] hover:bg-[#a2c5d4] max-w-40">
+        <Button
+          className="text-white capitalize bg-[#3b6b87] hover:bg-[#a2c5d4] max-w-40"
+          loading={isSubmitting}
+        >
           Tiếp tục
         </Button>
       </form>
     </div>
   );
-
 }
-  

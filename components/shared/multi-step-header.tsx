@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { useRouter } from "next/navigation"; // Corrected import to next/navigation
+import { useRouter } from "next-nprogress-bar";
 
 interface MultiStepHeaderProps {
   currentStep: number;
@@ -9,7 +9,11 @@ interface MultiStepHeaderProps {
   userId: string;
 }
 
-const MultiStepHeader: React.FC<MultiStepHeaderProps> = ({ currentStep, totalSteps, userId }) => {
+const MultiStepHeader: React.FC<MultiStepHeaderProps> = ({
+  currentStep,
+  totalSteps,
+  userId,
+}) => {
   const router = useRouter();
   const progressPercentage = (currentStep / totalSteps) * 100;
 
@@ -26,8 +30,6 @@ const MultiStepHeader: React.FC<MultiStepHeaderProps> = ({ currentStep, totalSte
 
     if (step <= currentStep) {
       router.push(urls[step - 1]);
-    } else {
-      alert("Xin bổ sung thông tin");
     }
   };
 
@@ -41,11 +43,17 @@ const MultiStepHeader: React.FC<MultiStepHeaderProps> = ({ currentStep, totalSte
         {Array.from({ length: totalSteps }, (_, index) => (
           <div
             key={index}
-            className={`RSPBstep ${index + 1 <= currentStep ? "accomplished" : ""}`}
+            className={`RSPBstep ${
+              index + 1 <= currentStep ? "accomplished" : ""
+            }`}
             style={{ left: `${(index / (totalSteps - 1)) * 100}%` }}
             onClick={() => handleStepClick(index + 1)}
           >
-            <div className={`indexedStep ${index + 1 <= currentStep ? "accomplished" : ""}`}>
+            <div
+              className={`indexedStep ${
+                index + 1 <= currentStep ? "accomplished" : ""
+              }`}
+            >
               {index + 1}
             </div>
           </div>

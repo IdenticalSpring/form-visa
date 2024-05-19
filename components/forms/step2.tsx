@@ -13,32 +13,35 @@ import { FormItem } from "../shared/form-item";
 import { Button } from "../ui/button";
 import { useEffect, useState } from "react";
 
-const formSchema = z.object({
-  
-  id_issue_date: z.date({ message: "Vui lòng nhập trường này" }),
-  id_expire_date: z.date({ message: "Vui lòng nhập trường này" }),
-  id_country_receive: z
-    .string({ message: "Vui lòng nhập trường này" })
-    .min(1, "Vui lòng nhập trường này"),
-  id_city_receive: z
-    .string({ message: "Vui lòng nhập trường này" })
-    .min(1, "Vui lòng nhập trường này"),
-  id_lost_reason: z.string().optional(),
-  is_id_had_been_lost: z.number(),
-}).refine((data) => {
-  if (data.is_id_had_been_lost === 1 && !data.id_lost_reason) {
-    return false;
-  }
-  return true;
-}, {
-  message: "Vui lòng nhập lý do mất hộ chiếu",
-  path: ["id_lost_reason"],
-});
+const formSchema = z
+  .object({
+    id_issue_date: z.date({ message: "Vui lòng nhập trường này" }),
+    id_expire_date: z.date({ message: "Vui lòng nhập trường này" }),
+    id_country_receive: z
+      .string({ message: "Vui lòng nhập trường này" })
+      .min(1, "Vui lòng nhập trường này"),
+    id_city_receive: z
+      .string({ message: "Vui lòng nhập trường này" })
+      .min(1, "Vui lòng nhập trường này"),
+    id_lost_reason: z.string().optional(),
+    is_id_had_been_lost: z.number(),
+  })
+  .refine(
+    (data) => {
+      if (data.is_id_had_been_lost === 1 && !data.id_lost_reason) {
+        return false;
+      }
+      return true;
+    },
+    {
+      message: "Vui lòng nhập lý do mất hộ chiếu",
+      path: ["id_lost_reason"],
+    }
+  );
 
 export const Step2Form = ({ data }: { data: UserInfo }) => {
   const router = useRouter();
   const searchParams = useSearchParams();
-  console.log(searchParams.get("country"), searchParams.get("email"));
 
   const [isInitialLoad, setIsInitialLoad] = useState(true);
   const [loading, setLoading] = useState(false);
@@ -46,7 +49,7 @@ export const Step2Form = ({ data }: { data: UserInfo }) => {
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isSubmitting },
     reset,
     watch,
     setValue,
@@ -55,8 +58,12 @@ export const Step2Form = ({ data }: { data: UserInfo }) => {
     defaultValues: {
       id_city_receive: data?.id_city_receive ?? "",
       id_country_receive: data?.id_country_receive ?? "",
-      id_expire_date: data?.id_expire_date ? new Date(data.id_expire_date) : new Date(),
-      id_issue_date: data?.id_issue_date ? new Date(data.id_issue_date) : new Date(),
+      id_expire_date: data?.id_expire_date
+        ? new Date(data.id_expire_date)
+        : new Date(),
+      id_issue_date: data?.id_issue_date
+        ? new Date(data.id_issue_date)
+        : new Date(),
       is_id_had_been_lost: data?.id_lost_reason ? 1 : 0,
       id_lost_reason: data?.id_lost_reason ?? "",
     },
@@ -89,12 +96,11 @@ export const Step2Form = ({ data }: { data: UserInfo }) => {
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     setLoading(true);
-      const { is_id_had_been_lost, ...rest } = values;
-      const rs = await saveData({ ...rest, id: data.id });
-      if (rs == "ok") router.push(`/thong-tin-cong-viec-hien-tai?id=${data?.id}`);
-      setLoading(false);
+    const { is_id_had_been_lost, ...rest } = values;
+    const rs = await saveData({ ...rest, id: data.id });
+    if (rs == "ok") router.push(`/thong-tin-cong-viec-hien-tai?id=${data?.id}`);
+    setLoading(false);
   };
-  
 
   const handleBackClick = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
@@ -104,7 +110,7 @@ export const Step2Form = ({ data }: { data: UserInfo }) => {
   return (
     <form
       className="flex flex-col gap-6 bg-opacity-80"
-      onSubmit={handleSubmit(onSubmit, (error) => console.log(error))}
+      onSubmit={handleSubmit(onSubmit)}
     >
       <div className="grid gap-4">
         <FormItem label="Ngày cấp">
@@ -195,7 +201,6 @@ export const Step2Form = ({ data }: { data: UserInfo }) => {
           type="submit"
           className="text-white capitalize bg-[#3b6b87] hover:bg-[#a2c5d4]"
           loading={loading}
-
         >
           Tiếp tục
         </Button>

@@ -36,7 +36,7 @@ export const Step5Form = ({ data }: { data: UserInfo }) => {
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isSubmitting },
     reset,
     watch,
     setValue,
@@ -45,9 +45,13 @@ export const Step5Form = ({ data }: { data: UserInfo }) => {
     defaultValues: {
       education_level: data.education_level ?? "",
       major: data.major ?? "",
-      school_end_date: data.school_end_date ? new Date(data.school_end_date) : new Date(),
+      school_end_date: data.school_end_date
+        ? new Date(data.school_end_date)
+        : new Date(),
       school_name: data.school_name ?? "",
-      school_start_date: data.school_start_date ? new Date(data.school_start_date) : new Date(),
+      school_start_date: data.school_start_date
+        ? new Date(data.school_start_date)
+        : new Date(),
     },
   });
 
@@ -78,17 +82,17 @@ export const Step5Form = ({ data }: { data: UserInfo }) => {
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     setLoading(true);
-  
-      const rs = await saveData({
-        ...values,
-        id: data.id,
-      });
-      if (rs == "ok") {
-        router.push(`/thong-tin-gia-dinh?id=${data.id}`);
-      }
-      setLoading(false);
+
+    const rs = await saveData({
+      ...values,
+      id: data.id,
+    });
+    if (rs == "ok") {
+      router.push(`/thong-tin-gia-dinh?id=${data.id}`);
+    }
+    setLoading(false);
   };
-  
+
   const handleBackClick = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     router.push(`/thong-tin-cong-viec-truoc-day?id=${data.id}`);
@@ -96,7 +100,7 @@ export const Step5Form = ({ data }: { data: UserInfo }) => {
   return (
     <form
       className="flex flex-col gap-6 bg-opacity-80"
-      onSubmit={handleSubmit(onSubmit, (error) => console.log(error))}
+      onSubmit={handleSubmit(onSubmit)}
     >
       <div className="grid gap-4">
         <FormItem label="Trình độ">
@@ -159,9 +163,11 @@ export const Step5Form = ({ data }: { data: UserInfo }) => {
           <ArrowLeft />
           Trở về
         </Button>
-        <Button type="submit" className="text-white capitalize bg-[#3b6b87] hover:bg-[#a2c5d4]"
-              loading={loading}
-              >
+        <Button
+          type="submit"
+          className="text-white capitalize bg-[#3b6b87] hover:bg-[#a2c5d4]"
+          loading={loading}
+        >
           Tiếp tục
         </Button>
       </div>
