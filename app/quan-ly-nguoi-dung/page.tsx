@@ -21,9 +21,9 @@ export default async function Page() {
   }));
 
   return (
-    <div className="p-10 w-[1500px] max-w-[100%] justify-center" style={{ background: "#F0F0F0" }}>
+    <div className="p-10 w-full h-full max-w-[100%] justify-center" style={{ background: "#F0F0F0" }}>
       <div>
-        <h1>Quản lý người dùng</h1>
+        <h1 className="text-3xl font-bold text-gray-700 mb-10">Quản lý người dùng</h1>
         <UserTable users={formattedUsers} />
       </div>
     </div>

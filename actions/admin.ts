@@ -1,14 +1,16 @@
 // import { NextApiRequest, NextApiResponse } from 'next';
 // import { OpenAI } from 'openai';
 
-// const configuration = new Configuration({
-//   apiKey: process.env.OPENAI_API_KEY,
-// });
-// const openai = new OpenAI(configuration);
-
 // const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 //   if (req.method === 'POST') {
 //     const user = req.body;
+//     const apiKey = process.env.OPENAI_API_KEY;
+
+//     if (!apiKey) {
+//       return res.status(500).json({ error: 'OpenAI API key is not set' });
+//     }
+
+//     const openai = new OpenAI({ apiKey });
 
 //     const prompt = `
 //       Validate the user visa CV score on a scale of 1 to 10 based on the following information:
