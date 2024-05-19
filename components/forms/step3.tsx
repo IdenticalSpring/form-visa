@@ -38,7 +38,7 @@ const formSchema = z.object({
       message: "Vui lòng nhập trường này",
     })
     .min(1, "Vui lòng nhập trường này"),
-  current_job_salary: z.number({
+  current_job_salary: z.string({
     message: "Vui lòng nhập trường này",
   }),
   current_job_detail: z
@@ -70,7 +70,7 @@ export const Step3Form = ({ data }: { data: UserInfo }) => {
       current_job: data.current_job ?? "",
       current_job_address: data.current_job_address ?? "",
       current_job_detail: data.current_job_detail ?? "",
-      current_job_salary: data.current_job_salary ?? 0,
+      current_job_salary: data.current_job_salary ?? "",
       current_job_start_date: data.current_job_start_date
         ? new Date(data.current_job_start_date)
         : new Date(),
@@ -203,7 +203,7 @@ export const Step3Form = ({ data }: { data: UserInfo }) => {
         </FormItem>
         <FormItem label="Mức lương hàng tháng(vnd)">
           <input
-            {...register("current_job_salary", { valueAsNumber: true })}
+            {...register("current_job_salary")}
             onInput={(evt) => {
               var inputValue = evt.currentTarget.value;
               var numericValue = inputValue.replace(/\D/g, "");

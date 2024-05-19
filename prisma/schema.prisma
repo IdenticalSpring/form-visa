@@ -43,7 +43,7 @@ model UserInfo {
   current_job_start_date DateTime?
   current_company_phone_number String?
   current_job_title String?
-  current_job_salary BigInt?
+  current_job_salary String?
   current_job_detail String? @db.Text
   //Thông tin công việc -> Công Việc Trước Đây
   old_job String?

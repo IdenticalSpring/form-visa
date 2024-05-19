@@ -128,14 +128,11 @@ export const Step1Form = ({ data }: { data?: UserInfo }) => {
   const onSubmit = async (value: z.infer<typeof formSchema>) => {
     setLoading(true);
     const { is_has_other_nationality, ...rest } = value;
-    const rs = await saveData(
-      {
-        ...rest,
-        id: data?.id,
-        is_has_kid: value.is_has_kid ? true : false,
-      },
-      `/thong-tin-ho-chieu?id=${data?.id}`
-    );
+    const rs = await saveData({
+      ...rest,
+      id: data?.id,
+      is_has_kid: value.is_has_kid ? true : false,
+    });
     setLoading(false);
     if (rs === "ok") router.push(`/thong-tin-ho-chieu?id=${data?.id}`);
   };

@@ -33,10 +33,7 @@ export const createNewRecord = async (data: {
   }
 };
 
-export const saveData = async (
-  data: Partial<UserInfo>,
-  nextStepUrl: string
-) => {
+export const saveData = async (data: Partial<UserInfo>) => {
   try {
     let rs;
     if (data.id) {
