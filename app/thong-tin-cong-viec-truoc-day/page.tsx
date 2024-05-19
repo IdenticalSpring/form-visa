@@ -16,11 +16,13 @@ export default async function page({
   if (!data) redirect("/");
   return (
     <div className="background-wrapper bg-opacity-50 min-h-screen flex items-center justify-center sm:p-0 md:p-6 p-10">
-<div className="w-[600px] max-w-[90%]  p-4 sm:p-6 md:p-8 lg:p-10 rounded-lg bg-white  bg-opacity-90">
-    <MultiStepHeader currentStep={4} totalSteps={7} userId={data.id}/> 
+      <div className="w-[600px] max-w-[90%]  p-4 sm:p-6 md:p-8 lg:p-10 rounded-lg bg-white  bg-opacity-90">
+        <MultiStepHeader currentStep={4} totalSteps={7} userId={data.id} />
+        <h1 className="font-bold text-2xl block mx-auto mb-4">
+          Thông tin công việc trước đây
+        </h1>
         <Step4Form data={data} />
       </div>
     </div>
-    
   );
 }
